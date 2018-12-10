@@ -1,2 +1,2 @@
 # libjson
-Forking from original project locatedat http://sourceforge.net/projects/libjson/
+Forking from original project located at http://sourceforge.net/projects/libjson/
