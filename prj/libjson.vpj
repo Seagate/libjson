@@ -1,0 +1,315 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+    Version="10.0"
+    VendorName="SlickEdit"
+    TemplateName="Other C/C++"
+    WorkingDir=".">
+    <Config
+        Name="Debug"
+        Type="cpp"
+        DebugCallbackName="gdb"
+        OutputFile="%bdlibjson"
+        CompilerConfigName="Latest Version">
+        <Menu>
+            <Target
+                Name="Compile"
+                MenuCaption="&amp;Compile"
+                CaptureOutputWith="ProcessBuffer"
+                OutputExts="*.o"
+                SaveOption="SaveCurrent"
+                RunFromDir="%rw">
+                <Exec CmdLine='cc -c -g %i %defd -o "%bd%n.o" "%f"'/>
+            </Target>
+            <Target
+                Name="Link"
+                MenuCaption="&amp;Link">
+                <Exec CmdLine='cc -g -o "%o" %f %libs'/>
+            </Target>
+            <Target
+                Name="Build"
+                MenuCaption="&amp;Build"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveWorkspaceFiles"
+                RunFromDir="%rw">
+                <Exec CmdLine='"%(VSLICKBIN1)vsbuild" build "%w" "%r"'/>
+            </Target>
+            <Target
+                Name="Rebuild"
+                MenuCaption="&amp;Rebuild"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveWorkspaceFiles"
+                RunFromDir="%rw">
+                <Exec CmdLine='"%(VSLICKBIN1)vsbuild" rebuild "%w" "%r"'/>
+            </Target>
+            <Target
+                Name="Debug"
+                MenuCaption="&amp;Debug"
+                SaveOption="SaveNone"
+                BuildFirst="1"
+                CaptureOutputWith="ProcessBuffer"
+                RunFromDir="%rw">
+                <Exec CmdLine='vsdebugio -prog "%o"'/>
+            </Target>
+            <Target
+                Name="Execute"
+                MenuCaption="E&amp;xecute"
+                SaveOption="SaveNone"
+                BuildFirst="1"
+                CaptureOutputWith="ProcessBuffer"
+                RunFromDir="%rw">
+                <Exec CmdLine='"%o"'/>
+            </Target>
+        </Menu>
+    </Config>
+    <Config
+        Name="Release"
+        Type="cpp"
+        DebugCallbackName="gdb"
+        OutputFile="%bdlibjson"
+        CompilerConfigName="Latest Version">
+        <Menu>
+            <Target
+                Name="Compile"
+                MenuCaption="&amp;Compile"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveCurrent"
+                OutputExts="*.o"
+                RunFromDir="%rw">
+                <Exec CmdLine='cc -c -O %i %defd -o "%bd%n.o" "%f"'/>
+            </Target>
+            <Target
+                Name="Link"
+                MenuCaption="&amp;Link">
+                <Exec CmdLine='cc -O -o "%o" %f %libs'/>
+            </Target>
+            <Target
+                Name="Build"
+                MenuCaption="&amp;Build"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveWorkspaceFiles"
+                RunFromDir="%rw">
+                <Exec CmdLine='"%(VSLICKBIN1)vsbuild" build "%w" "%r"'/>
+            </Target>
+            <Target
+                Name="Rebuild"
+                MenuCaption="&amp;Rebuild"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveWorkspaceFiles"
+                RunFromDir="%rw">
+                <Exec CmdLine='"%(VSLICKBIN1)vsbuild" rebuild "%w" "%r"'/>
+            </Target>
+            <Target
+                Name="Debug"
+                MenuCaption="&amp;Debug"
+                SaveOption="SaveNone"
+                BuildFirst="1"
+                CaptureOutputWith="ProcessBuffer"
+                RunFromDir="%rw">
+                <Exec CmdLine='vsdebugio -prog "%o"'/>
+            </Target>
+            <Target
+                Name="Execute"
+                MenuCaption="E&amp;xecute"
+                SaveOption="SaveNone"
+                BuildFirst="1"
+                CaptureOutputWith="ProcessBuffer"
+                RunFromDir="%rw">
+                <Exec CmdLine='"%o"'/>
+            </Target>
+        </Menu>
+    </Config>
+    <Rules Name="Compile">
+        <Rule
+            InputExts="*.s"
+            OutputExts="*.o"
+            LinkObject="1">
+            <Exec CmdLine='as -o "%bd%n.o" "%f"'/>
+        </Rule>
+    </Rules>
+    <Files>
+        <Folder
+            Name="Source Files"
+            Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.c++;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl;*.d;*.m;*.mm;*.go">
+            <F N="../_internal/Source/._internalJSONNode.cpp"/>
+            <F N="../_internal/Source/._JSONAllocator.cpp"/>
+            <F N="../_internal/Source/._JSONChildren.cpp"/>
+            <F N="../_internal/Source/._JSONDebug.cpp"/>
+            <F N="../_internal/Source/._JSONIterators.cpp"/>
+            <F N="../_internal/Source/._JSONMemory.cpp"/>
+            <F N="../_internal/Source/._JSONNode.cpp"/>
+            <F N="../_internal/Source/._JSONNode_Mutex.cpp"/>
+            <F N="../_internal/Source/._JSONPreparse.cpp"/>
+            <F N="../_internal/Source/._JSONStream.cpp"/>
+            <F N="../_internal/Source/._JSONWorker.cpp"/>
+            <F N="../_internal/Source/._JSONWriter.cpp"/>
+            <F N="../_internal/Source/._libjson.cpp"/>
+            <F N="../_internal/TestSuite2/NumberToString/_areFloatsEqual.cpp"/>
+            <F N="../_internal/TestSuite2/NumberToString/_atof.cpp"/>
+            <F N="../_internal/TestSuite2/NumberToString/_ftoa.cpp"/>
+            <F N="../_internal/TestSuite2/NumberToString/_itoa.cpp"/>
+            <F N="../_internal/TestSuite2/NumberToString/_uitoa.cpp"/>
+            <F N="../_internal/TestSuite2/NumberToString/getLenSize.cpp"/>
+            <F N="../_internal/Source/internalJSONNode.cpp"/>
+            <F N="../_internal/TestSuite2/NumberToString/isNumeric.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidArray.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidMember.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidNamedObject.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidNumber.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidObject.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidPartialRoot.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidRoot.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidString.cpp"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_ASSERT.cpp"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_ASSERT_SAFE.cpp"/>
+            <F N="../_internal/TestSuite2/JSON_Base64/json_decode64.cpp"/>
+            <F N="../_internal/TestSuite2/JSON_Base64/json_encode64.cpp"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_FAIL.cpp"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_FAIL_SAFE.cpp"/>
+            <F N="../_internal/Source/JSONAllocator.cpp"/>
+            <F N="../_internal/Source/JSONChildren.cpp"/>
+            <F N="../_internal/Source/JSONDebug.cpp"/>
+            <F N="../_internal/Source/JSONIterators.cpp"/>
+            <F N="../_internal/Source/JSONMemory.cpp"/>
+            <F N="../_internal/Source/JSONNode.cpp"/>
+            <F N="../_internal/Source/JSONNode_Mutex.cpp"/>
+            <F N="../_internal/Source/JSONPreparse.cpp"/>
+            <F N="../_internal/TestSuite2/JSONGlobals/jsonSingleton.cpp"/>
+            <F N="../_internal/Source/JSONStream.cpp"/>
+            <F N="../_internal/Source/JSONValidator.cpp"/>
+            <F N="../_internal/Source/JSONWorker.cpp"/>
+            <F N="../_internal/Source/JSONWriter.cpp"/>
+            <F N="../_internal/Source/libjson.cpp"/>
+            <F N="../_internal/TestSuite/main.cpp"/>
+            <F N="../_internal/TestSuite/All/main.cpp"/>
+            <F N="../_internal/TestSuite/Benchmark/main.cpp"/>
+            <F N="../_internal/TestSuite/RunTestSuite2.cpp"/>
+            <F N="../_internal/TestSuite2/JSONValidator/securityTest.cpp"/>
+            <F N="../_internal/TestSuite/TestAssign.cpp"/>
+            <F N="../_internal/TestSuite/TestBinary.cpp"/>
+            <F N="../_internal/TestSuite/TestChildren.cpp"/>
+            <F N="../_internal/TestSuite/TestComments.cpp"/>
+            <F N="../_internal/TestSuite/TestConverters.cpp"/>
+            <F N="../_internal/TestSuite/TestCtors.cpp"/>
+            <F N="../_internal/TestSuite/TestEquality.cpp"/>
+            <F N="../_internal/TestSuite/TestFunctions.cpp"/>
+            <F N="../_internal/TestSuite/TestInequality.cpp"/>
+            <F N="../_internal/TestSuite/TestInspectors.cpp"/>
+            <F N="../_internal/TestSuite/TestIterators.cpp"/>
+            <F N="../_internal/TestSuite/TestMutex.cpp"/>
+            <F N="../_internal/TestSuite/TestNamespace.cpp"/>
+            <F N="../_internal/TestSuite/TestRefCounting.cpp"/>
+            <F N="../_internal/TestSuite/TestSharedString.cpp"/>
+            <F N="../_internal/TestSuite/TestStreams.cpp"/>
+            <F N="../_internal/TestSuite/TestString.cpp"/>
+            <F N="../_internal/TestSuite/TestSuite.cpp"/>
+            <F N="../_internal/TestSuite/TestValidator.cpp"/>
+            <F N="../_internal/TestSuite/TestWriter.cpp"/>
+            <F N="../_internal/TestSuite/UnitTest.cpp"/>
+        </Folder>
+        <Folder
+            Name="Header Files"
+            Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.h++;*.inc;*.sh;*.cpy;*.if">
+            <F N="../_internal/Source/JSONDefs/._GNU_C.h"/>
+            <F N="../_internal/Source/._internalJSONNode.h"/>
+            <F N="../_internal/Source/._JSON_Base64.h"/>
+            <F N="../_internal/Source/._JSONAllocator.h"/>
+            <F N="../_internal/Source/._JSONChildren.h"/>
+            <F N="../_internal/Source/._JSONDebug.h"/>
+            <F N="../_internal/Source/._JSONDefs.h"/>
+            <F N="../_internal/Source/._JSONGlobals.h"/>
+            <F N="../_internal/Source/._JSONMemory.h"/>
+            <F N="../_internal/Source/._JSONMemoryPool.h"/>
+            <F N="../_internal/Source/._JSONNode.h"/>
+            <F N="../._JSONOptions.h"/>
+            <F N="../_internal/Source/._JSONPreparse.h"/>
+            <F N="../_internal/Source/._JSONSharedString.h"/>
+            <F N="../_internal/Source/._JSONSingleton.h"/>
+            <F N="../_internal/Source/._JSONStats.h"/>
+            <F N="../_internal/Source/._JSONStream.h"/>
+            <F N="../_internal/Source/._JSONValidator.h"/>
+            <F N="../_internal/Source/._JSONWorker.h"/>
+            <F N="../_internal/Dependencies/libbase64++/._libbase64++.h"/>
+            <F N="../_internal/Dependencies/mempool++/._mempool.h"/>
+            <F N="../_internal/Source/._NumberToString.h"/>
+            <F N="../_internal/Source/JSONDefs/._Strings_Defs.h"/>
+            <F N="../_internal/Source/JSONDefs/._Unknown_C.h"/>
+            <F N="../_internal/Source/JSONDefs/._Visual_C.h"/>
+            <F N="../_internal/TestSuite2/NumberToString/_areFloatsEqual.h"/>
+            <F N="../_internal/TestSuite2/NumberToString/_atof.h"/>
+            <F N="../_internal/TestSuite2/NumberToString/_ftoa.h"/>
+            <F N="../_internal/TestSuite2/NumberToString/_itoa.h"/>
+            <F N="../_internal/TestSuite2/NumberToString/_uitoa.h"/>
+            <F N="../_internal/TestSuite2/BaseTest.h"/>
+            <F N="../_internal/TestSuite2/NumberToString/getLenSize.h"/>
+            <F N="../_internal/Source/JSONDefs/GNU_C.h"/>
+            <F N="../_internal/Source/internalJSONNode.h"/>
+            <F N="../_internal/TestSuite2/NumberToString/isNumeric.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidArray.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidMember.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidNamedObject.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidNumber.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidObject.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidPartialRoot.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidRoot.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/isValidString.h"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_ASSERT.h"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_ASSERT_SAFE.h"/>
+            <F N="../_internal/Source/JSON_Base64.h"/>
+            <F N="../_internal/TestSuite2/JSON_Base64/json_decode64.h"/>
+            <F N="../_internal/TestSuite2/JSON_Base64/json_encode64.h"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_FAIL.h"/>
+            <F N="../_internal/TestSuite2/JSONDebug/JSON_FAIL_SAFE.h"/>
+            <F N="../_internal/Source/JSONAllocator.h"/>
+            <F N="../_internal/Source/JSONChildren.h"/>
+            <F N="../_internal/Source/JSONDebug.h"/>
+            <F N="../_internal/Source/JSONDefs.h"/>
+            <F N="../_internal/Source/JSONGlobals.h"/>
+            <F N="../_internal/Source/JSONMemory.h"/>
+            <F N="../_internal/Source/JSONMemoryPool.h"/>
+            <F N="../_internal/Source/JSONNode.h"/>
+            <F N="../JSONOptions.h"/>
+            <F N="../_internal/Source/JSONPreparse.h"/>
+            <F N="../_internal/Source/JSONSharedString.h"/>
+            <F N="../_internal/Source/JSONSingleton.h"/>
+            <F N="../_internal/TestSuite2/JSONGlobals/jsonSingleton.h"/>
+            <F N="../_internal/Source/JSONStats.h"/>
+            <F N="../_internal/Source/JSONStream.h"/>
+            <F N="../_internal/Source/JSONValidator.h"/>
+            <F N="../_internal/Source/JSONWorker.h"/>
+            <F N="../_internal/Dependencies/libbase64++/libbase64++.h"/>
+            <F N="../libjson.h"/>
+            <F N="../_internal/Dependencies/mempool++/mempool.h"/>
+            <F N="../_internal/Source/NumberToString.h"/>
+            <F N="../_internal/TestSuite/RunTestSuite2.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/securityTest.h"/>
+            <F N="../_internal/Source/JSONDefs/Strings_Defs.h"/>
+            <F N="../_internal/TestSuite/StringTest.h"/>
+            <F N="../_internal/TestSuite/TestSuite.h"/>
+            <F N="../_internal/TestSuite/UnitTest.h"/>
+            <F N="../_internal/Source/JSONDefs/Unknown_C.h"/>
+            <F N="../_internal/TestSuite/UStringTest.h"/>
+            <F N="../_internal/TestSuite2/JSONValidator/Resources/validyMacros.h"/>
+            <F N="../_internal/Source/JSONDefs/Visual_C.h"/>
+        </Folder>
+        <Folder
+            Name="Resource Files"
+            Filters="*.ico;*.cur;*.dlg"/>
+        <Folder
+            Name="Bitmaps"
+            Filters="*.bmp"/>
+        <Folder
+            Name="Other Files"
+            Filters="">
+            <F N="../_internal/Source/._JSONDefs"/>
+            <F N="../_internal/Dependencies/._libbase64++"/>
+            <F N="../_internal/Dependencies/._mempool++"/>
+            <F N="../_internal/TestSuite/Checklist.txt"/>
+            <F N="../License.txt"/>
+            <F N="../_internal/TestSuite/All/Options.txt"/>
+            <F N="../_internal/TestSuite/TestSuite.1"/>
+            <F N="../_internal/TestSuite/TestSuite2Creator.php"/>
+            <F N="../UpgradeLog.htm"/>
+            <F N="../_internal/TestSuite2/JSONValidator/Resources/validyMacros.h~"/>
+        </Folder>
+    </Files>
+</Project>
