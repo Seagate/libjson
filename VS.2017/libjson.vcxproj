@@ -46,7 +46,7 @@
     <ProjectName>statLibJson</ProjectName>
     <ProjectGuid>{153A6FE5-40A9-4C31-B0C2-1C68D2E37BEA}</ProjectGuid>
     <RootNamespace>statLibJson</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='small|Win32'" Label="Configuration">
