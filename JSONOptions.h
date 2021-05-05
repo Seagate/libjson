@@ -283,7 +283,7 @@
  *  JSON_INT_TYPE lets you change the int type for as_int.  If you ommit this option, the default
  *  long will be used
  */
-//#define JSON_INT_TYPE long
+#define JSON_INT_TYPE long long
 
 
 /*
