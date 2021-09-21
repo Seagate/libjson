@@ -60,7 +60,8 @@ public:
 	   bool negative;
 
 	   START_MEM_SCOPE
-	   long value = (long)val;
+	   //long value = (long)val;
+	   JSON_INT_TYPE value = (JSON_INT_TYPE)val;
 	   //first thing, check if it's negative, if so, make it positive
 	   if (value < 0){
 		  value = -value;
