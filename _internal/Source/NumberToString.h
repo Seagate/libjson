@@ -109,7 +109,7 @@ public:
 
     #ifdef JSON_ISO_STRICT
 	   #define EXTRA_LONG
-	   #define FLOAT_STRING "%f"
+	   #define FLOAT_STRING "%.10f"
 	   #define LFLOAT_STRING L"%f"
     #else
 	   #define EXTRA_LONG long
