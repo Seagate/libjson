@@ -134,10 +134,10 @@ OS=$(shell uname)
 ifeq ($(OS), Darwin)
 	cxxflags_default = -fast -ffast-math -fexpensive-optimizations -DNDEBUG
 else
-	cxxflags_default = -O3 -ffast-math -fexpensive-optimizations -DNDEBUG
+	cxxflags_default = -O3 -ffast-math -fexpensive-optimizations -DNDEBUG -f$(PIC)
 endif
-cxxflags_small   = -Os -ffast-math -DJSON_LESS_MEMORY -DNDEBUG
-cxxflags_debug   = -g -DJSON_SAFE -DJSON_DEBUG
+cxxflags_small   = -Os -ffast-math -DJSON_LESS_MEMORY -DNDEBUG -f$(PIC)
+cxxflags_debug   = -g -DJSON_SAFE -DJSON_DEBUG -f$(PIC)
 cxxflags_shared  = -f$(PIC)
 libname          = libjson
 libname_hdr      := $(libname)
