@@ -235,7 +235,7 @@
 
 
 /*
- *  JSON_WRITE_SINGLE_LINE_COMMENTS will cause libjson to write all comments in using //
+ *  JSON_WRITE_SINGLE_LINE_COMMENTS will cTause libjson to write all comments in using //
  *  notation, or (#) if that option is on.  Some parsers do not support multiline C comments
  *  although, this option is not needed for bash comments, as they are all single line anyway
  */
@@ -290,7 +290,7 @@
  *  JSON_NUMBER_TYPE lets you change the number type for as_float as well as the internal storage for the
  *	number.  If you omit this option, the default double will be used for most cases and float for JSON_LESS_MEMORY
  */
-//#define JSON_NUMBER_TYPE double
+#define JSON_NUMBER_TYPE double
 
 
 /*

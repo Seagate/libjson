@@ -109,8 +109,8 @@ public:
 
     #ifdef JSON_ISO_STRICT
 	   #define EXTRA_LONG
-	   #define FLOAT_STRING "%.2f"
-	   #define LFLOAT_STRING L"%.2f"
+	   #define FLOAT_STRING "%.12f"
+	   #define LFLOAT_STRING L"%.12f"
     #else
 	   #define EXTRA_LONG long
 	   #define FLOAT_STRING "%Lf"
@@ -126,9 +126,11 @@ public:
 		#else
 			  //ScopeCoverage(_ftoa_coverage, 5);
 	   #endif
+	   #ifdef MODIFY_FLOATS
 		  if (json_unlikely(_floatsAreEqual(value, (json_number)((long EXTRA_LONG)value)))){
 			 return _itoa<long EXTRA_LONG>((long EXTRA_LONG)value);
 		  }
+	   #endif
 
 	   #ifdef JSON_LESS_MEMORY
 		  json_auto<json_char> s(64);
@@ -145,6 +147,7 @@ public:
 			 snprintf(num_str_result, 63, FLOAT_STRING, (EXTRA_LONG double)value);
 		  #endif
 	   #endif
+	   #ifdef MODIFY_FLOATS
 	   //strip the trailing zeros
 	   for(json_char * pos = &num_str_result[0]; *pos; ++pos){
 		  if (json_unlikely(*pos == '.')){  //only care about after the decimal
@@ -157,6 +160,7 @@ public:
 			 break;
 		  }
 	   }
+	   #endif
 	   return json_string(num_str_result);
     }
 

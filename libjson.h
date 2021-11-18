@@ -93,6 +93,7 @@
 
 		  /* inspectors */
 		  char json_type(json_const JSONNODE * node);
+		  char json_numtype(json_const JSONNODE * node);
 		  json_index_t json_size(json_const JSONNODE * node);
 		  json_bool_t json_empty(json_const JSONNODE * node);
 		  json_char * json_name(json_const JSONNODE * node);
