@@ -1,6 +1,7 @@
 #include "JSONWorker.h"
 
-#include <cstdint>
+//Use stdint.h instead of cstdint for the include because old GCC in centos7 throws an error for cstdint, but not stdint.h
+#include <stdint.h>
 
 #if !defined (INTPTR_MAX)
 //If this is not defined, then assume intptr_t is not available.
