@@ -7,7 +7,7 @@
 //manually defined here if this is the case (unlikely at this point)
 //using long long as that will be more than big enough in both 32bit and 64bit. 
 //If you want to add more ifdef's here to change this definition, go for it, but it is only necessary if intptr_t is not already available.
-typedef long long intptr_t
+typedef long long intptr_t;
 #endif
 
 bool used_ascii_one = false;  //used to know whether or not to check for intermediates when writing, once flipped, can't be unflipped
