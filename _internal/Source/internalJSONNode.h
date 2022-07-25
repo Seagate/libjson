@@ -101,6 +101,7 @@ public:
     json_index_t size(void) const json_nothrow json_read_priority;
     bool empty(void) const json_nothrow;
     unsigned char type(void) const json_nothrow json_read_priority;
+    unsigned char numtype(void) const json_nothrow json_read_priority;
 
     json_string name(void) const json_nothrow json_read_priority;
     void setname(const json_string & newname) json_nothrow json_write_priority;
@@ -252,6 +253,7 @@ public:
 
 
     mutable unsigned char _type BITS(3);
+    mutable unsigned char _numtype BITS(3);
 
     json_string _name;
     mutable bool _name_encoded BITS(1);  //must be above name due to initialization list order
@@ -263,6 +265,7 @@ public:
     union value_union_t {
 	   bool _bool BITS(1);
 	   json_number _number;
+       json_int_t _inumber;
 	   #ifdef JSON_LESS_MEMORY
 		  jsonChildren * Children;
 	   #endif
@@ -330,6 +333,10 @@ inline bool internalJSONNode::empty(void) const json_nothrow {
 
 inline unsigned char internalJSONNode::type(void) const json_nothrow {
     return _type;
+}
+
+inline unsigned char internalJSONNode::numtype(void) const json_nothrow {
+    return _numtype;
 }
 
 inline json_string internalJSONNode::name(void) const json_nothrow {

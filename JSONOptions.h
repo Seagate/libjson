@@ -290,7 +290,7 @@
  *  JSON_NUMBER_TYPE lets you change the number type for as_float as well as the internal storage for the
  *	number.  If you omit this option, the default double will be used for most cases and float for JSON_LESS_MEMORY
  */
-//#define JSON_NUMBER_TYPE double
+#define JSON_NUMBER_TYPE double
 
 
 /*

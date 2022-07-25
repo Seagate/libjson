@@ -148,6 +148,7 @@ public:
     bool empty(void) const json_nothrow json_read_priority;
     void clear(void) json_nothrow json_cold;
     unsigned char type(void) const json_nothrow json_read_priority;
+	unsigned char numtype(void) const json_nothrow json_read_priority;
 
     json_string name(void) const json_nothrow json_read_priority;
     void set_name(const json_string & newname) json_nothrow json_write_priority;
@@ -634,6 +635,11 @@ inline void JSONNode::clear(void) json_nothrow {
 inline unsigned char JSONNode::type(void) const json_nothrow {
     JSON_CHECK_INTERNAL();
     return internal -> type();
+}
+
+inline unsigned char JSONNode::numtype(void) const json_nothrow {
+	JSON_CHECK_INTERNAL();
+	return internal->numtype();
 }
 
 inline json_string JSONNode::name(void) const json_nothrow {
