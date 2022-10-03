@@ -24,6 +24,8 @@
 #define JSON_BOOL '\3'
 #define JSON_ARRAY '\4'
 #define JSON_NODE '\5'
+#define JSON_INT '\6'
+#define JSON_FLOAT '\7'
 
 #ifdef __cplusplus
 	#if defined(JSON_MEMORY_CALLBACKS) || defined(JSON_MEMORY_POOL)
