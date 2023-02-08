@@ -196,6 +196,11 @@ else
 	objdir                      := $(objdir)_static
 endif
 
+COMPILER_VERSION := $(shell $(CXX) --version)
+ifneq (,$(findstring clang,$(COMPILER_VERSION)))
+	override CXXFLAGS += -stdlib=libc++
+endif
+
 # Phony targets
 .PHONY: all banner installdirs install install_headers clean uninstall \
         uninstall_headers
