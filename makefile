@@ -184,6 +184,10 @@ else
 	CXXFLAGS    ?= $(cxxflags_default)
 endif
 
+ifeq ($(ARCH),x86_32)
+	BUILD = -m32
+endif
+
 # SHARED specific settings
 ifeq ($(SHARED), 1)
 	libname_shared               = $(libname).$(suffix_shared)
@@ -237,7 +241,7 @@ endif
 
 # Compile object files
 $(objdir)/%.o: $(srcdir)/%.cpp
-	$(CXX) $< -o $@ -c $(CXXFLAGS)
+	$(CXX) $< -o $@ -c $(CXXFLAGS) $(BUILD)
 
 ifeq ($(SHARED),1)
 install: banner install_headers $(lib_target)
