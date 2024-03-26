@@ -47,23 +47,23 @@ if architecture == 'x86_32'
 endif
 
 # Build type specific flags
-build_type = get_option('build_type')
-if build_type == 'small'
+#build_type = get_option('build_type')
+#if build_type == 'small'
     cpp_args += cxxflags_small
-elif build_type == 'debug'
+#elif build_type == 'debug'
     cpp_args += cxxflags_debug
-else
+#else
     cpp_args += cxxflags_default
-endif
+#endif
 
 # Shared library settings
-shared = get_option('shared')
+#shared = get_option('shared')
 
 lib_target = libname + '.' + (shared ? 'so' : 'a')
 
 libdir = join_paths(get_option('prefix'), 'lib')
 
-includedir = join_paths(get_option('prefix'), 'include', libname)
+#includedir = join_paths(get_option('prefix'), 'include', libname)
 
 # Targets
 objs = []
