@@ -59,14 +59,14 @@ endif
 # Shared library settings
 #shared = get_option('shared')
 
-lib_target = libname + '.' + (shared ? 'so' : 'a')
+#lib_target = libname + '.' + (shared ? 'so' : 'a')
 
-libdir = join_paths(get_option('prefix'), 'lib')
+#libdir = join_paths(get_option('prefix'), 'lib')
 
 #includedir = join_paths(get_option('prefix'), 'include', libname)
 
 # Targets
-objs = []
+#objs = []
 
 common_sources = [
     '_internal/Source/internalJSONNode.cpp',
@@ -86,5 +86,5 @@ common_sources = [
 ]
 
 
-libjson = static_library('libjson', common_sources, include_directories : incdir)
+libjson = static_library('libjson', common_sources, c_args: cpp_args,include_directories : incdir)
 libjson_dep = declare_dependency(link_with : libjson, include_directories : incdir)
