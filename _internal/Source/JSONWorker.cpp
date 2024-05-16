@@ -3,7 +3,7 @@
 //Use stdint.h instead of cstdint for the include because old GCC in centos7 throws an error for cstdint, but not stdint.h
 #include <stdint.h>
 
-#if !defined (INTPTR_MAX)
+#if !defined (INTPTR_MAX) && !defined (__intptr_t_defined)
 //If this is not defined, then assume intptr_t is not available.
 //manually defined here if this is the case (unlikely at this point)
 //using long long as that will be more than big enough in both 32bit and 64bit. 
