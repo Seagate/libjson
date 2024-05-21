@@ -541,7 +541,8 @@ void JSONWorker::UnfixString(const json_string & value_t, bool flag, json_string
 				res += JSON_TEXT("\\r");
 				break;
 			 case JSON_TEXT('/'):	//forward slash
-				res += JSON_TEXT("\\/");
+				//res += JSON_TEXT("\\/");
+				 res += JSON_TEXT("/");
 				break;
 			 case JSON_TEXT('\b'):	//backspace
 				res += JSON_TEXT("\\b");
