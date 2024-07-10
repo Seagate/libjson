@@ -2,7 +2,6 @@
 #  This is the meson file             #
 #-------------------------------------#
 
-
 project('libjson', 'cpp')
 
 # Configuration
