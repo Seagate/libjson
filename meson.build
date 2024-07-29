@@ -29,6 +29,18 @@ cxxflags_shared = ['-fPIC']
 cxxflags_small = ['-Os', '-ffast-math', '-DJSON_LESS_MEMORY', '-DNDEBUG', '-fPIC']
 cxxflags_debug = ['-g', '-DJSON_SAFE', '-DJSON_DEBUG', '-fPIC']
 
+
+if cpp.get_id().contains('gcc')
+  if cpp.version().version_compare('<5.0')
+    if cpp.has_argument('-std=gnu++11')
+      # Add this argument to the list since C++11 is a minimum required C++ compiler standard
+      add_project_arguments('-std=gnu++11', language: 'cpp')
+    else
+      error('C++11/GNU++11 standard is required but was not able to be set!')
+    endif
+  endif
+endif
+
 # Adjustments based on OS
 if machine == 'darwin'
     cxxflags_default += ['-fast']
