@@ -319,6 +319,10 @@
 	   return ((JSONNode*)node) -> type();
     }
 
+	char json_numtype(json_const JSONNODE * node){
+	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_type"), return JSON_NULL;);
+	   return ((JSONNode*)node) -> numtype();
+    }
     json_index_t json_size(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_size"), return 0;);
 	   return ((JSONNode*)node) -> size();

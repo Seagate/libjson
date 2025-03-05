@@ -10,10 +10,10 @@ public:
 	static json_char * RemoveWhiteSpaceAndCommentsC(const json_string & value_t, bool escapeQuotes) json_nothrow json_read_priority;
 
     #ifdef JSON_READ_PRIORITY
-	   static JSONNode parse(const json_string & json) json_throws(std::invalid_argument) json_read_priority;
-	   static JSONNode parse_unformatted(const json_string & json) json_throws(std::invalid_argument) json_read_priority;
+	   static JSONNode parse(const json_string & json) /*json_throws(std::invalid_argument)*/ json_read_priority;
+	   static JSONNode parse_unformatted(const json_string & json) /*json_throws(std::invalid_argument)*/ json_read_priority;
 
-		static JSONNode _parse_unformatted(const json_char * json, const json_char * const end) json_throws(std::invalid_argument) json_read_priority;
+		static JSONNode _parse_unformatted(const json_char * json, const json_char * const end) /*json_throws(std::invalid_argument)*/ json_read_priority;
 
 		static json_char * RemoveWhiteSpace(const json_string & value_t, size_t & len, bool escapeQuotes) json_nothrow json_read_priority;
 

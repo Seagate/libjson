@@ -262,6 +262,8 @@ void internalJSONNode::Set(const json_string & val) json_nothrow {
     void internalJSONNode::Set(json_int_t val) json_nothrow {
 	   makeNotContainer();
 	   _type = JSON_NUMBER;
+	   _numtype = JSON_INT;
+	   //_value._inumber = val;
 	   _value._number = (json_number)val;
 	   #if(defined(JSON_CASTABLE) || !defined(JSON_LESS_MEMORY) || defined(JSON_WRITE_PRIORITY))
 		  _string = NumberToString::_itoa<json_int_t>(val);
@@ -274,6 +276,7 @@ void internalJSONNode::Set(const json_string & val) json_nothrow {
     void internalJSONNode::Set(json_number val) json_nothrow {
 	   makeNotContainer();
 	   _type = JSON_NUMBER;
+	   _numtype = JSON_FLOAT;
 	   _value._number = val;
 	   #if(defined(JSON_CASTABLE) || !defined(JSON_LESS_MEMORY) || defined(JSON_WRITE_PRIORITY))
 		  _string = NumberToString::_ftoa(val);

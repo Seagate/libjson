@@ -60,7 +60,8 @@ public:
 	   bool negative;
 
 	   START_MEM_SCOPE
-	   long value = (long)val;
+	   //long value = (long)val;
+	   JSON_INT_TYPE value = (JSON_INT_TYPE)val;
 	   //first thing, check if it's negative, if so, make it positive
 	   if (value < 0){
 		  value = -value;
@@ -108,8 +109,8 @@ public:
 
     #ifdef JSON_ISO_STRICT
 	   #define EXTRA_LONG
-	   #define FLOAT_STRING "%f"
-	   #define LFLOAT_STRING L"%f"
+	   #define FLOAT_STRING "%.6f"
+	   #define LFLOAT_STRING L"%.6f"
     #else
 	   #define EXTRA_LONG long
 	   #define FLOAT_STRING "%Lf"

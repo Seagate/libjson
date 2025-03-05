@@ -1,5 +1,16 @@
 #include "JSONWorker.h"
 
+//Use stdint.h instead of cstdint for the include because old GCC in centos7 throws an error for cstdint, but not stdint.h
+#include <stdint.h>
+
+#if !defined (INTPTR_MAX) && !defined (__intptr_t_defined)
+//If this is not defined, then assume intptr_t is not available.
+//manually defined here if this is the case (unlikely at this point)
+//using long long as that will be more than big enough in both 32bit and 64bit. 
+//If you want to add more ifdef's here to change this definition, go for it, but it is only necessary if intptr_t is not already available.
+typedef long long intptr_t;
+#endif
+
 bool used_ascii_one = false;  //used to know whether or not to check for intermediates when writing, once flipped, can't be unflipped
 inline json_char ascii_one(void) json_nothrow {
 	used_ascii_one = true;
@@ -8,14 +19,14 @@ inline json_char ascii_one(void) json_nothrow {
 
 #ifdef JSON_READ_PRIORITY
 
-JSONNode JSONWorker::parse(const json_string & json) json_throws(std::invalid_argument) {
+JSONNode JSONWorker::parse(const json_string & json) /*json_throws(std::invalid_argument)*/ {
 	json_auto<json_char> s;
 	size_t len;
 	s.set(RemoveWhiteSpace(json, len, true));
 	return _parse_unformatted(s.ptr, s.ptr + len);
 }
 
-JSONNode JSONWorker::parse_unformatted(const json_string & json) json_throws(std::invalid_argument) {
+JSONNode JSONWorker::parse_unformatted(const json_string & json) /*json_throws(std::invalid_argument)*/ {
     #if defined JSON_DEBUG || defined JSON_SAFE
 	   #ifndef JSON_NO_EXCEPTIONS
 		  JSON_ASSERT_SAFE((json[0] == JSON_TEXT('{')) || (json[0] == JSON_TEXT('[')), JSON_TEXT("Not JSON!"), throw std::invalid_argument(json_global(EMPTY_STD_STRING)););
@@ -26,7 +37,7 @@ JSONNode JSONWorker::parse_unformatted(const json_string & json) json_throws(std
 	return _parse_unformatted(json.data(), json.data() + json.length());
 }
 
-JSONNode JSONWorker::_parse_unformatted(const json_char * json, const json_char * const end) json_throws(std::invalid_argument) {
+JSONNode JSONWorker::_parse_unformatted(const json_char * json, const json_char * const end) /*json_throws(std::invalid_argument)*/ {
     #ifdef JSON_COMMENTS
 	   json_char firstchar = *json;
 	   json_string _comment;
@@ -294,7 +305,7 @@ json_string JSONWorker::RemoveWhiteSpaceAndComments(const json_string & value_t,
 #endif
 
 json_uchar JSONWorker::UTF8(const json_char * & pos, const json_char * const end) json_nothrow {
-	JSON_ASSERT_SAFE(((long)end - (long)pos) > 4, JSON_TEXT("UTF will go out of bounds"), return JSON_TEXT('\0'););
+	JSON_ASSERT_SAFE(((intptr_t)end - (intptr_t)pos) > 4, JSON_TEXT("UTF will go out of bounds"), return JSON_TEXT('\0'););
     #ifdef JSON_UNICODE
 	   ++pos;
 	   json_uchar temp = Hex(pos) << 8;
@@ -337,7 +348,7 @@ json_char JSONWorker::Hex(const json_char * & pos) json_nothrow {
 
 #ifndef JSON_STRICT
     inline json_char FromOctal(const json_char * & str, const json_char * const end) json_nothrow {
-	   JSON_ASSERT_SAFE(((long)end - (long)str) > 3, JSON_TEXT("Octal will go out of bounds"), return JSON_TEXT('\0'););
+	   JSON_ASSERT_SAFE(((intptr_t)end - (intptr_t)str) > 3, JSON_TEXT("Octal will go out of bounds"), return JSON_TEXT('\0'););
 	   str += 2;
 	   return (json_char)(((((json_uchar)(*(str - 2) - 48))) << 6) | (((json_uchar)(*(str - 1) - 48)) << 3) | ((json_uchar)(*str - 48)));
     }
@@ -386,7 +397,7 @@ void JSONWorker::SpecialChar(const json_char * & pos, const json_char * const en
 		  break;
 	   #ifndef JSON_STRICT
 		  case JSON_TEXT('x'):   //hexidecimal ascii code
-			 JSON_ASSERT_SAFE(((long)end - (long)pos) > 3, JSON_TEXT("Hex will go out of bounds"), res += JSON_TEXT('\0'); return;);
+			 JSON_ASSERT_SAFE(((intptr_t)end - (intptr_t)pos) > 3, JSON_TEXT("Hex will go out of bounds"), res += JSON_TEXT('\0'); return;);
 			 res += Hex(++pos);
 			 break;
 
@@ -530,7 +541,8 @@ void JSONWorker::UnfixString(const json_string & value_t, bool flag, json_string
 				res += JSON_TEXT("\\r");
 				break;
 			 case JSON_TEXT('/'):	//forward slash
-				res += JSON_TEXT("\\/");
+				//res += JSON_TEXT("\\/");
+				 res += JSON_TEXT("/");
 				break;
 			 case JSON_TEXT('\b'):	//backspace
 				res += JSON_TEXT("\\b");

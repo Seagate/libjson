@@ -169,6 +169,9 @@ static inline void clearString(json_string & str) json_nothrow {
 static inline void shrinkString(json_string & str) json_nothrow {
     #ifdef JSON_LESS_MEMORY
         if (str.capacity() != str.length()) str = json_string(str.begin(), str.end());
+	#else
+		//This doesn't do anything, but stops a "maybe unused" warning
+		static_cast<void>(str);
     #endif
 }
 

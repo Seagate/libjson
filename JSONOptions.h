@@ -283,14 +283,14 @@
  *  JSON_INT_TYPE lets you change the int type for as_int.  If you ommit this option, the default
  *  long will be used
  */
-//#define JSON_INT_TYPE long
+#define JSON_INT_TYPE long long
 
 
 /*
  *  JSON_NUMBER_TYPE lets you change the number type for as_float as well as the internal storage for the
  *	number.  If you omit this option, the default double will be used for most cases and float for JSON_LESS_MEMORY
  */
-//#define JSON_NUMBER_TYPE double
+#define JSON_NUMBER_TYPE double
 
 
 /*

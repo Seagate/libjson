@@ -148,6 +148,7 @@ public:
     bool empty(void) const json_nothrow json_read_priority;
     void clear(void) json_nothrow json_cold;
     unsigned char type(void) const json_nothrow json_read_priority;
+	unsigned char numtype(void) const json_nothrow json_read_priority;
 
     json_string name(void) const json_nothrow json_read_priority;
     void set_name(const json_string & newname) json_nothrow json_write_priority;
@@ -176,17 +177,17 @@ public:
 	   void set_binary(const unsigned char * bin, size_t bytes) json_nothrow json_cold;
     #endif
 
-    JSONNode & at(json_index_t pos) json_throws(std::out_of_range);
-    const JSONNode & at(json_index_t pos) const json_throws(std::out_of_range);
+    JSONNode & at(json_index_t pos) /*json_throws(std::out_of_range)*/;
+    const JSONNode & at(json_index_t pos) const /*json_throws(std::out_of_range)*/;
 
     JSONNode & operator[](json_index_t pos) json_nothrow;
     const JSONNode & operator[](json_index_t pos) const json_nothrow;
 
-    JSONNode & at(const json_string & name_t) json_throws(std::out_of_range);
-    const JSONNode & at(const json_string & name_t) const json_throws(std::out_of_range);
+    JSONNode & at(const json_string & name_t) /*json_throws(std::out_of_range)*/;
+    const JSONNode & at(const json_string & name_t) const /*json_throws(std::out_of_range)*/;
     #ifdef JSON_CASE_INSENSITIVE_FUNCTIONS
-	   JSONNode & at_nocase(const json_string & name_t) json_throws(std::out_of_range);
-	   const JSONNode & at_nocase(const json_string & name_t) const json_throws(std::out_of_range);
+	   JSONNode & at_nocase(const json_string & name_t) /*json_throws(std::out_of_range)*/;
+	   const JSONNode & at_nocase(const json_string & name_t) const /*json_throws(std::out_of_range)*/;
     #endif
     JSONNode & operator[](const json_string & name_t) json_nothrow;
     const JSONNode & operator[](const json_string & name_t) const json_nothrow;
@@ -197,10 +198,10 @@ public:
 	   void push_back(const JSONNode & node) json_nothrow;
     #endif
     void reserve(json_index_t siz) json_nothrow;
-    JSONNode JSON_PTR_LIB pop_back(json_index_t pos) json_throws(std::out_of_range);
-    JSONNode JSON_PTR_LIB pop_back(const json_string & name_t) json_throws(std::out_of_range);
+    JSONNode JSON_PTR_LIB pop_back(json_index_t pos) /*json_throws(std::out_of_range)*/;
+    JSONNode JSON_PTR_LIB pop_back(const json_string & name_t) /*json_throws(std::out_of_range)*/;
     #ifdef JSON_CASE_INSENSITIVE_FUNCTIONS
-	   JSONNode JSON_PTR_LIB pop_back_nocase(const json_string & name_t) json_throws(std::out_of_range);
+	   JSONNode JSON_PTR_LIB pop_back_nocase(const json_string & name_t) /*json_throws(std::out_of_range)*/;
     #endif
 
     DECLARE_FOR_ALL_TYPES(JSONNode & operator =)
@@ -634,6 +635,11 @@ inline void JSONNode::clear(void) json_nothrow {
 inline unsigned char JSONNode::type(void) const json_nothrow {
     JSON_CHECK_INTERNAL();
     return internal -> type();
+}
+
+inline unsigned char JSONNode::numtype(void) const json_nothrow {
+	JSON_CHECK_INTERNAL();
+	return internal->numtype();
 }
 
 inline json_string JSONNode::name(void) const json_nothrow {
