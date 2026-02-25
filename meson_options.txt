@@ -1,0 +1,9 @@
+option('enable_legacy_tests',
+       type : 'boolean',
+       value : true,
+       description : 'Enable legacy internal test suites')
+
+option('json_safe',
+       type : 'feature',
+       value : 'enabled',
+       description : 'Enable JSON_SAFE build behavior (adds -DJSON_SAFE)')
