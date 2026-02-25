@@ -39,7 +39,7 @@ public:
 	struct iterator;
 	  struct const_iterator {
 		const_iterator(const json_char * p, const json_shared_string * pa) : parent(pa), it(p){}
-	  
+
 		 inline const_iterator& operator ++(void) json_nothrow { ++it; return *this; }
 		 inline const_iterator& operator --(void) json_nothrow { --it; return *this; }
 		 inline const_iterator& operator +=(long i) json_nothrow { it += i; return *this; }
@@ -64,7 +64,7 @@ public:
 			result.it -= i;
 			return result;
 		 }
-		 inline const json_char & operator [](size_t pos) const json_nothrow { return it[pos]; };
+		 inline const json_char & operator [](size_t pos) const json_nothrow { return it[pos]; }
 		 inline const json_char & operator *(void) const json_nothrow { return *it; }
 		 inline const json_char * operator ->(void) const json_nothrow { return it; }
 		 inline bool operator == (const const_iterator & other) const json_nothrow { return it == other.it; }
@@ -89,10 +89,10 @@ public:
 		 friend class json_shared_string;
 		 friend struct iterator;
 	  };
-	  
+
 	  struct iterator {
 		iterator(const json_char * p, const json_shared_string * pa) : parent(pa), it(p){}
-	  
+
 		 inline iterator& operator ++(void) json_nothrow { ++it; return *this; }
 		 inline iterator& operator --(void) json_nothrow { --it; return *this; }
 		 inline iterator& operator +=(long i) json_nothrow { it += i; return *this; }
@@ -117,7 +117,7 @@ public:
 			result.it -= i;
 			return result;
 		 }
-		 inline const json_char & operator [](size_t pos) const json_nothrow { return it[pos]; };
+		 inline const json_char & operator [](size_t pos) const json_nothrow { return it[pos]; }
 		 inline const json_char & operator *(void) const json_nothrow { return *it; }
 		 inline const json_char * operator ->(void) const json_nothrow { return it; }
 		 inline bool operator == (const const_iterator & other) const json_nothrow { return it == other.it; }
@@ -146,68 +146,68 @@ public:
 
 
 	inline json_shared_string::iterator begin(void){
-		iterator res = iterator(data(), this); 
+		iterator res = iterator(data(), this);
 		return res;
 	}
 	inline json_shared_string::iterator end(void){
-		iterator res = iterator(data() + len, this); 
+		iterator res = iterator(data() + len, this);
 		return res;
 	}
 	inline json_shared_string::const_iterator begin(void) const {
-		const_iterator res = const_iterator(data(), this); 
+		const_iterator res = const_iterator(data(), this);
 		return res;
 	}
 	inline json_shared_string::const_iterator end(void) const {
-		const_iterator res = const_iterator(data() + len, this); 
+		const_iterator res = const_iterator(data() + len, this);
 		return res;
 	}
-	
+
 
 	inline json_string::iterator std_begin(void){
-		return _str -> mystring.begin() + offset;
+		return _str -> mystring.begin() + static_cast<json_string::difference_type>(offset);
 	}
 	inline json_string::iterator std_end(void){
-		return std_begin() + len;
+		return std_begin() + static_cast<json_string::difference_type>(len);
 	}
-	
+
 	inline json_string::const_iterator std_begin(void) const{
-		return _str -> mystring.begin() + offset;
+		return _str -> mystring.begin() + static_cast<json_string::difference_type>(offset);
 	}
 	inline json_string::const_iterator std_end(void) const{
-		return std_begin() + len;
+		return std_begin() + static_cast<json_string::difference_type>(len);
 	}
-	
-	inline json_shared_string(void) : offset(0), len(0), _str(new(json_malloc<json_shared_string_internal>(1)) json_shared_string_internal(json_global(EMPTY_JSON_STRING))) {}
-	
-	inline json_shared_string(const json_string & str) : offset(0), len(str.length()), _str(new(json_malloc<json_shared_string_internal>(1)) json_shared_string_internal(str)) {}
-	
+
+	inline json_shared_string(void) : _str(new(json_malloc<json_shared_string_internal>(1)) json_shared_string_internal(json_global(EMPTY_JSON_STRING))), offset(0), len(0) {}
+
+	inline json_shared_string(const json_string & str) : _str(new(json_malloc<json_shared_string_internal>(1)) json_shared_string_internal(str)), offset(0), len(str.length()) {}
+
 	inline json_shared_string(const json_shared_string & str, size_t _offset, size_t _len) : _str(str._str), offset(str.offset + _offset), len(_len) {
 		++_str -> refCount;
 	}
-	
+
 	inline json_shared_string(const json_shared_string & str, size_t _offset) : _str(str._str), offset(str.offset + _offset), len(str.len - _offset) {
 		++_str -> refCount;
 	}
-	
-	inline json_shared_string(const iterator & s, const iterator & e) : _str(s.parent -> _str), offset(s.it - s.parent -> _str -> mystring.data()), len(e.it - s.it){
+
+	inline json_shared_string(const iterator & s, const iterator & e) : _str(s.parent -> _str), offset(static_cast<size_t>(s.it - s.parent -> _str -> mystring.data())), len(static_cast<size_t>(e.it - s.it)){
 		++_str -> refCount;
 	}
-	
+
 	inline ~json_shared_string(void){
 		deref();
 	}
-	
+
 	inline bool empty(void) const { return len == 0; }
-	
+
 	size_t find(json_char ch, size_t pos = 0) const {
 		if (_str -> refCount == 1) return _str -> mystring.find(ch, pos);
 		json_string::const_iterator e = std_end();
-		for(json_string::const_iterator b = std_begin() + pos; b != e; ++b){
-			if (*b == ch) return b - std_begin();
+		for(json_string::const_iterator b = std_begin() + static_cast<json_string::difference_type>(pos); b != e; ++b){
+			if (*b == ch) return static_cast<size_t>(b - std_begin());
 		}
 		return json_string::npos;
 	}
-	
+
 	inline json_char & operator[] (size_t loc){
 		return _str -> mystring[loc + offset];
 	}
@@ -218,21 +218,21 @@ public:
 	inline size_t length() const { return len; }
 	inline const json_char * c_str() const { return toString().c_str(); }
 	inline const json_char * data() const { return _str -> mystring.data() + offset; }
-	
+
 	inline bool operator != (const json_shared_string & other) const {
 		if ((other._str == _str) && (other.len == len) && (other.offset == offset)) return false;
 		return other.toString() != toString();
 	}
-	
+
 	inline bool operator == (const json_shared_string & other) const {
 		if ((other._str == _str) && (other.len == len) && (other.offset == offset)) return true;
 		return other.toString() == toString();
 	}
-	
+
 	inline bool operator == (const json_string & other) const {
 		return other == toString();
 	}
-	
+
 	json_string & toString(void) const {
 		//gonna have to do a real substring now anyway, so do it completely
 		if (_str -> refCount == 1){
@@ -246,8 +246,8 @@ public:
 		offset = 0;
 		return _str -> mystring;
 	}
-	
-	
+
+
 	inline void assign(const json_shared_string & other, size_t _offset, size_t _len){
 		if (other._str != _str){
 			deref();
@@ -257,11 +257,11 @@ public:
 		offset = other.offset + _offset;
 		len = _len;
 	}
-	
+
 	json_shared_string(const json_shared_string & other) : _str(other._str), offset(other.offset), len(other.len){
 		++_str -> refCount;
 	}
-	
+
 	json_shared_string & operator =(const json_shared_string & other){
 		if (other._str != _str){
 			deref();
@@ -272,13 +272,13 @@ public:
 		len = other.len;
 		return *this;
 	}
-	
+
 	json_shared_string & operator += (const json_char c){
 		toString() += c;
 		++len;
 		return *this;
 	}
-	
+
 	//when doing a plus equal of another string, see if it shares the string and starts where this one left off, in which case just increase len
 JSON_PRIVATE
 	struct json_shared_string_internal {

@@ -212,8 +212,8 @@ public:
 	   bool failed = false;\
 	   try {\
 		  code;\
-	   } catch (exc){\
-		  PASS(std::string(#exc) + " caught");\
+    } catch (const exc &){\
+        PASS(std::string(#exc) + " caught");\
 		  failed = true;\
 	   }\
 	   if (test_unlikely(!failed)){ FAIL(std::string(#exc) + " not caught");}\

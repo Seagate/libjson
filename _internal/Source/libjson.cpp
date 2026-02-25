@@ -37,7 +37,7 @@
 		  return (json_char *)std::memcpy(json_malloc<json_char>(len), str.c_str(), len);
 	   #endif
     }
-	
+
 	inline json_char * alreadyCString(json_char * str) json_nothrow {
 		#ifdef JSON_MEMORY_MANAGE
 		   return (json_char *)json_global(STRING_HANDLER).insert(str);
@@ -275,13 +275,13 @@
 		#elif defined(JSON_MEMORY_CALLBACKS)
 			return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(*((JSONNode*)orig)));
 		#else
-			return MANAGER_INSERT(new JSONNode(*((JSONNode*)orig)));
+			return MANAGER_INSERT(new JSONNode(*(reinterpret_cast<const JSONNode*>(orig))));
 		#endif
 	}
 
     JSONNODE * json_duplicate(json_const JSONNODE * orig){
 	   JSON_ASSERT_SAFE(orig, JSON_TEXT("null orig to json_duplicate"), return 0;);
-	   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(((JSONNode*)orig) -> duplicate()));
+	   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow((reinterpret_cast<const JSONNode*>(orig)) -> duplicate()));
     }
 
     //assignment
@@ -309,75 +309,71 @@
     void json_set_n(JSONNODE * node, json_const JSONNODE * orig){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_set_n"), return;);
 	   JSON_ASSERT_SAFE(orig, JSON_TEXT("null node to json_set_n"), return;);
-	   *((JSONNode*)node) = *((JSONNode*)orig);
+	   *((JSONNode*)node) = *(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(orig)));
     }
 
 
     //inspectors
-    char json_type(json_const JSONNODE * node){
-	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_type"), return JSON_NULL;);
-	   return ((JSONNode*)node) -> type();
-    }
+	 char json_type(json_const JSONNODE * node){
+		 JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_type"), return JSON_NULL;);
+		 return static_cast<char>(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> type());
+	 }
 
-	char json_numtype(json_const JSONNODE * node){
-	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_type"), return JSON_NULL;);
-	   return ((JSONNode*)node) -> numtype();
-    }
+	 char json_numtype(json_const JSONNODE * node){
+		 JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_type"), return JSON_NULL;);
+		 return static_cast<char>(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> numtype());
+	 }
     json_index_t json_size(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_size"), return 0;);
-	   return ((JSONNode*)node) -> size();
+	   return const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> size();
     }
 
     json_bool_t json_empty(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_empty"), return true;);
-	   return (json_bool_t)(((JSONNode*)node) -> empty());
+	   return (json_bool_t)(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> empty());
     }
 
     json_char * json_name(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_name"), return toCString(EMPTY_CSTRING););
-	   return toCString(((JSONNode*)node) -> name());
+	   return toCString(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> name());
     }
 
     #ifdef JSON_COMMENTS
 	   json_char * json_get_comment(json_const JSONNODE * node){
 		  JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_get_comment"), return toCString(EMPTY_CSTRING););
-		  return toCString(((JSONNode*)node) -> get_comment());
+		  return toCString(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> get_comment());
 	   }
     #endif
 
     json_char * json_as_string(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_string"), return toCString(EMPTY_CSTRING););
-	   return toCString(((JSONNode*)node) -> as_string());
-	   //return toCString(static_cast<json_string>(*((JSONNode*)node)));
+	   return toCString(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> as_string());
     }
 
     json_int_t json_as_int(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_int"), return 0;);
-	   return ((JSONNode*)node) -> as_int();
-	   //return static_cast<json_int_t>(*((JSONNode*)node));
+	   return const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> as_int();
     }
 
     json_number json_as_float(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_float"), return 0.0f;);
-	   return ((JSONNode*)node) -> as_float();
-	   //return static_cast<json_number>(*((JSONNode*)node));
+	   return const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> as_float();
     }
 
     json_bool_t json_as_bool(json_const JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_bool"), return false;);
-	   return ((JSONNode*)node) -> as_bool();
-	   //return (json_bool_t)static_cast<bool>(*((JSONNode*)node));
+	   return const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> as_bool();
     }
 
 	#ifdef JSON_CASTABLE
 		JSONNODE * json_as_node(json_const JSONNODE * node){
 		   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_node"), return 0;);
-		   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(((JSONNode*)node) -> as_node()));
+		   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow((reinterpret_cast<const JSONNode*>(node)) -> as_node()));
 		}
 
 		JSONNODE * json_as_array(json_const JSONNODE * node){
 		   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_array"), return 0;);
-		   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(((JSONNode*)node) -> as_array()));
+		   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow((reinterpret_cast<const JSONNode*>(node)) -> as_array()));
 		}
 	#endif
 
@@ -400,7 +396,7 @@
     #ifdef JSON_BINARY
 	   void * json_as_binary(json_const JSONNODE * node, unsigned long * size){
 		  JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_binary"), if (size){*size = 0;} return 0;);
-		  return returnDecode64(((JSONNode*)node) -> as_binary(), size);
+		  return returnDecode64((reinterpret_cast<const JSONNode*>(node)) -> as_binary(), size);
 
 	   }
     #endif
@@ -424,12 +420,12 @@
     #ifdef JSON_WRITE_PRIORITY
 	   json_char * json_write(json_const JSONNODE * node){
 		  JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_write"), return toCString(EMPTY_CSTRING););
-		  return toCString(((JSONNode*)node) -> write());
+		  return toCString(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> write());
 	   }
 
 	   json_char * json_write_formatted(json_const JSONNODE * node){
 		  JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_write_formatted"), return toCString(EMPTY_CSTRING););
-		  return toCString(((JSONNode*)node) -> write_formatted());
+		  return toCString(const_cast<JSONNode*>(reinterpret_cast<const JSONNode*>(node)) -> write_formatted());
 	   }
     #endif
 
@@ -481,7 +477,7 @@
 	   void json_set_binary(JSONNODE * node, json_const void * data, unsigned long length){
 		  JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_swap"), return;);
 		  JSON_ASSERT_SAFE(data, JSON_TEXT("null data to json_set_binary"), *((JSONNode*)node) = EMPTY_CSTRING; return;);
-		  ((JSONNode*)node) -> set_binary((unsigned char *)data, (size_t)length);
+		  ((JSONNode*)node) -> set_binary(reinterpret_cast<unsigned char *>(const_cast<void *>(data)), static_cast<size_t>(length));
 	   }
     #endif
 

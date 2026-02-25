@@ -3,13 +3,38 @@
 
 #ifdef __GNUC__
 
-    #define json_deprecated(method, warning) method __attribute__((deprecated))
+	#if !defined (json_deprecated)
+		#if defined (__cpp_attributes) && defined (__has_cpp_attribute)
+			#if __has_cpp_attribute(deprecated)
+				#define json_deprecated(method, warning) method [[deprecated(warning)]]
+			#endif
+		#endif
+		#if !defined (json_deprecated)
+			#define json_deprecated(method, warning) method __attribute__((deprecated))
+		#endif
+	#else
+		#define json_deprecated(method, warning) method
+	#endif
 
     #if (__GNUC__ >= 3)
 	   #define JSON_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
     #else
 	   #define JSON_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
     #endif
+
+	#if !defined (json_fallthrough) && defined (__cpp_attributes) && defined (__has_cpp_attribute)
+	    #if __has_cpp_attribute(fallthrough)
+	        #define json_fallthrough [[fallthrough]]
+		#endif
+	#endif
+
+	#if !defined (json_fallthrough)
+		#if (JSON_GCC_VERSION >= 70000)
+			#define json_fallthrough __attribute__((fallthrough))
+		#else
+			#define json_fallthrough /* FALLTHRU */
+		#endif
+	#endif
 
     #if (JSON_GCC_VERSION >= 40300)
 	   #define json_hot __attribute__ ((hot))

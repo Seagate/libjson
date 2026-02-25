@@ -49,7 +49,7 @@
 #else
     #define json_throw(x) throw(x)
     #define json_try try
-    #define json_catch(exception, code) catch(exception){ code }
+    #define json_catch(exception, code) catch(const exception &){ code }
 #endif
 
 #ifdef JSON_STRICT

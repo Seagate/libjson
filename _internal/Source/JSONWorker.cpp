@@ -6,7 +6,7 @@
 #if !defined (INTPTR_MAX) && !defined (__intptr_t_defined)
 //If this is not defined, then assume intptr_t is not available.
 //manually defined here if this is the case (unlikely at this point)
-//using long long as that will be more than big enough in both 32bit and 64bit. 
+//using long long as that will be more than big enough in both 32bit and 64bit.
 //If you want to add more ifdef's here to change this definition, go for it, but it is only necessary if intptr_t is not already available.
 typedef long long intptr_t;
 #endif
@@ -38,10 +38,10 @@ JSONNode JSONWorker::parse_unformatted(const json_string & json) /*json_throws(s
 }
 
 JSONNode JSONWorker::_parse_unformatted(const json_char * json, const json_char * const end) /*json_throws(std::invalid_argument)*/ {
-    #ifdef JSON_COMMENTS
-	   json_char firstchar = *json;
-	   json_string _comment;
-	   json_char * runner = (json_char*)json;
+	 #ifdef JSON_COMMENTS
+		 json_char firstchar = *json;
+		 json_string _comment;
+		 json_char * runner = const_cast<json_char*>(json);
 	   if (json_unlikely(firstchar == JSON_TEMP_COMMENT_IDENTIFIER)){  //multiple comments will be consolidated into one
 		  newcomment:
 		  while(*(++runner) != JSON_TEMP_COMMENT_IDENTIFIER){
@@ -74,12 +74,12 @@ JSONNode JSONWorker::_parse_unformatted(const json_char * json, const json_char 
 				}
 			 }
 		  #endif
-		  #ifdef JSON_COMMENTS
-			 JSONNode foo(json_string(runner, end - runner));
-			 foo.set_comment(_comment);
+		#ifdef JSON_COMMENTS
+					 JSONNode foo(json_string(runner, static_cast<json_string::size_type>(end - runner)));
+					 foo.set_comment(_comment);
 			 return JSONNode(true, foo);  //forces it to simply return the original interal, even with ref counting off
 		  #else
-			 return JSONNode(json_string(json, end - json));
+			 return JSONNode(json_string(json, static_cast<json_string::size_type>(end - json)));
 		  #endif
     }
 
@@ -140,8 +140,8 @@ JSONNode JSONWorker::_parse_unformatted(const json_char * json, const json_char 
 	#endif
 		json_string::const_iterator start = value_t.begin();
 		json_string::const_iterator e = value_t.end();
-	   for (json_string::const_iterator p = value_t.begin() + pos; p != e; ++p){
-		  if (json_unlikely(*p == ch)) return p - start;
+		 for (json_string::const_iterator p = value_t.begin() + static_cast<json_string::difference_type>(pos); p != e; ++p){
+			 if (json_unlikely(*p == ch)) return static_cast<size_t>(p - start);
 		  switch (*p){
 				BRACKET(JSON_TEXT('['), JSON_TEXT(']'))
 				BRACKET(JSON_TEXT('{'), JSON_TEXT('}'))
@@ -199,7 +199,7 @@ inline void SingleLineComment(const json_char * & p, const json_char * const end
 				   if (T) COMMENT_DELIMITER();
 				   while ((*(++p) != JSON_TEXT('*')) || (*(p + 1) != JSON_TEXT('/'))){
 					  if(p == end){
-							COMMENT_DELIMITER(); 
+							COMMENT_DELIMITER();
 							goto endofrunner;
 						}
 					  if (T) *runner++ = *p;
@@ -210,6 +210,7 @@ inline void SingleLineComment(const json_char * & p, const json_char * const end
 				}
 				//Should be a single line C comment, so let it fall through to use the bash comment stripper
 				JSON_ASSERT_SAFE(*p == JSON_TEXT('/'), JSON_TEXT("stray / character, not quoted, or a comment"), goto endofrunner;);
+				json_fallthrough;
 			case JSON_TEXT('#'):  //a bash comment
 				if (T){
 					SingleLineComment(p, end AND_RUNNER);
@@ -237,6 +238,7 @@ inline void SingleLineComment(const json_char * & p, const json_char * const end
 				}
 			}
 			//no break, let it fall through so that the trailing quote gets added
+			json_fallthrough;
 		 default:
 			JSON_ASSERT_SAFE((json_uchar)*p >= 32, JSON_TEXT("Invalid JSON character detected (lo)"), goto endofrunner;);
 			JSON_ASSERT_SAFE((json_uchar)*p <= 126, JSON_TEXT("Invalid JSON character detected (hi)"), goto endofrunner;);
@@ -245,13 +247,13 @@ inline void SingleLineComment(const json_char * & p, const json_char * const end
 	  }
 	}
 	endofrunner:
-	len = runner - result;
+	len = static_cast<size_t>(reinterpret_cast<uintptr_t>(runner) - reinterpret_cast<uintptr_t>(result));
 	return result;
 }
 
 #ifdef JSON_READ_PRIORITY
     json_char * JSONWorker::RemoveWhiteSpace(const json_string & value_t, size_t & len, bool escapeQuotes) json_nothrow  {
-		json_char * result = PRIVATE_REMOVEWHITESPACE(true, value_t, escapeQuotes, len); 
+		json_char * result = PRIVATE_REMOVEWHITESPACE(true, value_t, escapeQuotes, len);
 		result[len] = JSON_TEXT('\0');
 		return result;
     }
@@ -267,7 +269,7 @@ json_char * JSONWorker::RemoveWhiteSpaceAndCommentsC(const json_string & value_t
 json_string JSONWorker::RemoveWhiteSpaceAndComments(const json_string & value_t, bool escapeQuotes) json_nothrow {
 	json_auto<json_char> s;
     size_t len;
-	s.set(PRIVATE_REMOVEWHITESPACE(false, value_t, escapeQuotes, len)); 
+	s.set(PRIVATE_REMOVEWHITESPACE(false, value_t, escapeQuotes, len));
 	return json_string(s.ptr, len);
 }
 
@@ -306,16 +308,16 @@ json_string JSONWorker::RemoveWhiteSpaceAndComments(const json_string & value_t,
 
 json_uchar JSONWorker::UTF8(const json_char * & pos, const json_char * const end) json_nothrow {
 	JSON_ASSERT_SAFE(((intptr_t)end - (intptr_t)pos) > 4, JSON_TEXT("UTF will go out of bounds"), return JSON_TEXT('\0'););
-    #ifdef JSON_UNICODE
-	   ++pos;
-	   json_uchar temp = Hex(pos) << 8;
-	   ++pos;
-	   return temp | Hex(pos);
+	#ifdef JSON_UNICODE
+		++pos;
+		json_uchar temp = static_cast<json_uchar>(Hex(pos)) << 8;
+		++pos;
+		return temp | static_cast<json_uchar>(Hex(pos));
     #else
 	   JSON_ASSERT(*(pos + 1) == JSON_TEXT('0'), JSON_TEXT("wide utf character (hihi)"));
 	   JSON_ASSERT(*(pos + 2) == JSON_TEXT('0'), JSON_TEXT("wide utf character (hilo)"));
-	   pos += 3;
-	   return Hex(pos);
+	pos += 3;
+	return static_cast<json_uchar>(Hex(pos));
     #endif
 }
 
@@ -391,9 +393,9 @@ void JSONWorker::SpecialChar(const json_char * & pos, const json_char * const en
 	   case JSON_TEXT('u'):	//utf character
 		  #ifdef JSON_UNICODE
 			 UTF(pos, res, end);
-		  #else
-			 res += UTF8(pos, end);
-		  #endif
+			 #else
+				 res += static_cast<json_char>(UTF8(pos, end));
+			 #endif
 		  break;
 	   #ifndef JSON_STRICT
 		  case JSON_TEXT('x'):   //hexidecimal ascii code
@@ -509,8 +511,8 @@ void JSONWorker::SpecialChar(const json_char * & pos, const json_char * const en
 	   if (hi > 57) hi += 7; //A-F don't immediately follow 0-9, so have to further adjust those
 	   json_uchar lo = (p & 0x000F) + 48;
 	   if (lo > 57) lo += 7; //A-F don't immediately follow 0-9, so have to further adjust those
-	   res += hi;
-	   res += lo;
+	res += static_cast<json_char>(hi);
+	res += static_cast<json_char>(lo);
 	   return res;
     }
 #endif
@@ -627,60 +629,60 @@ void JSONWorker::DoArray(const internalJSONNode * parent, const json_string & va
 	JSON_ASSERT(!value_t.empty(), JSON_TEXT("DoArray is empty"));
 	JSON_ASSERT_SAFE(value_t[0] == JSON_TEXT('['), JSON_TEXT("DoArray is not an array"), parent -> Nullify(); return;);
 	if (json_unlikely(value_t.length() <= 2)) return;  // just a [] (blank array)
-	
+
 	#ifdef JSON_SAFE
 		json_string newValue;  //share this so it has a reserved buffer
 	#endif
 	size_t starting = 1;  //ignore the [
-	
+
 	//Not sure what's in the array, so we have to use commas
 	for(size_t ending = FIND_NEXT_RELEVANT(JSON_TEXT(','), value_t, 1);
 		ending != json_string::npos;
 		ending = FIND_NEXT_RELEVANT(JSON_TEXT(','), value_t, starting)){
-		
+
 		#ifdef JSON_SAFE
-			newValue.assign(value_t.begin() + starting, value_t.begin() + ending);
+			newValue.assign(value_t.begin() + static_cast<json_string::difference_type>(starting), value_t.begin() + static_cast<json_string::difference_type>(ending));
 			JSON_ASSERT_SAFE(FIND_NEXT_RELEVANT(JSON_TEXT(':'), newValue, 0) == json_string::npos, JSON_TEXT("Key/Value pairs are not allowed in arrays"), parent -> Nullify(); return;);
 			NewNode(parent, json_global(EMPTY_JSON_STRING), newValue, true);
 		#else
-			NewNode(parent, json_global(EMPTY_JSON_STRING), json_string(value_t.begin() + starting, value_t.begin() + ending), true);
+			NewNode(parent, json_global(EMPTY_JSON_STRING), json_string(value_t.begin() + static_cast<json_string::difference_type>(starting), value_t.begin() + static_cast<json_string::difference_type>(ending)), true);
 		#endif
 		starting = ending + 1;
 	}
 	//since the last one will not find the comma, we have to add it here, but ignore the final ]
-	
+
 	#ifdef JSON_SAFE
-		newValue.assign(value_t.begin() + starting, value_t.end() - 1);
+		newValue.assign(value_t.begin() + static_cast<json_string::difference_type>(starting), value_t.end() - 1);
 		JSON_ASSERT_SAFE(FIND_NEXT_RELEVANT(JSON_TEXT(':'), newValue, 0) == json_string::npos, JSON_TEXT("Key/Value pairs are not allowed in arrays"), parent -> Nullify(); return;);
 		NewNode(parent, json_global(EMPTY_JSON_STRING), newValue, true);
 	#else
-		NewNode(parent, json_global(EMPTY_JSON_STRING), json_string(value_t.begin() + starting, value_t.end() - 1), true);
+		NewNode(parent, json_global(EMPTY_JSON_STRING), json_string(value_t.begin() + static_cast<json_string::difference_type>(starting), value_t.end() - 1), true);
 	#endif
 }
 
 
 //Create all child nodes
-void JSONWorker::DoNode(const internalJSONNode * parent, const json_string & value_t) json_nothrow {	
+void JSONWorker::DoNode(const internalJSONNode * parent, const json_string & value_t) json_nothrow {
 	//This take a node and creates its members and such
 	JSON_ASSERT(!value_t.empty(), JSON_TEXT("DoNode is empty"));
 	JSON_ASSERT_SAFE(value_t[0] == JSON_TEXT('{'), JSON_TEXT("DoNode is not an node"), parent -> Nullify(); return;);
 	if (json_unlikely(value_t.length() <= 2)) return;  // just a {} (blank node)
-	
+
 	size_t name_ending = FIND_NEXT_RELEVANT(JSON_TEXT(':'), value_t, 1);  //find where the name ends
 	JSON_ASSERT_SAFE(name_ending != json_string::npos, JSON_TEXT("Missing :"), parent -> Nullify(); return;);
-	json_string name(value_t.begin() + 1, value_t.begin() + name_ending - 1);	  //pull the name out
+		json_string name(value_t.begin() + 1, value_t.begin() + static_cast<json_string::difference_type>(name_ending - 1));	  //pull the name out
 	for (size_t value_ending = FIND_NEXT_RELEVANT(JSON_TEXT(','), value_t, name_ending),  //find the end of the value
 		 name_starting = 1;  //ignore the {
 		 value_ending != json_string::npos;
 		 value_ending = FIND_NEXT_RELEVANT(JSON_TEXT(','), value_t, name_ending)){
-		
-		NewNode(parent, name, json_string(value_t.begin() + name_ending + 1, value_t.begin() + value_ending), false);
+
+		NewNode(parent, name, json_string(value_t.begin() + static_cast<json_string::difference_type>(name_ending + 1), value_t.begin() + static_cast<json_string::difference_type>(value_ending)), false);
 		name_starting = value_ending + 1;
 		name_ending = FIND_NEXT_RELEVANT(JSON_TEXT(':'), value_t, name_starting);
 		JSON_ASSERT_SAFE(name_ending != json_string::npos, JSON_TEXT("Missing :"), parent -> Nullify(); return;);
-		name.assign(value_t.begin() + name_starting, value_t.begin() + name_ending - 1);
+		name.assign(value_t.begin() + static_cast<json_string::difference_type>(name_starting), value_t.begin() + static_cast<json_string::difference_type>(name_ending - 1));
 	}
 	//since the last one will not find the comma, we have to add it here
-	NewNode(parent, name, json_string(value_t.begin() + name_ending + 1, value_t.end() - 1), false);
+	NewNode(parent, name, json_string(value_t.begin() + static_cast<json_string::difference_type>(name_ending + 1), value_t.end() - 1), false);
 }
 #endif

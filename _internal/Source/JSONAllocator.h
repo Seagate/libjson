@@ -39,34 +39,34 @@ public:
 	typedef const T&  const_reference;
 	typedef T         value_type;
 	template <class U> struct rebind { typedef json_allocator<U> other; };
-	
-	//LIBJSON_OBJECT(json_allocator);
-	
-	inline json_allocator() json_nothrow { 
-		//LIBJSON_CTOR; 
+
+	//LIBJSON_OBJECT(json_allocator)
+
+	inline json_allocator() json_nothrow {
+		//LIBJSON_CTOR;
 	}
-	inline json_allocator(const json_allocator&) json_nothrow { 
-		//LIBJSON_COPY_CTOR; 
+	inline json_allocator(const json_allocator&) json_nothrow {
+		//LIBJSON_COPY_CTOR;
 	}
-	template <class U> inline json_allocator(const json_allocator<U>&) json_nothrow { 
-		//LIBJSON_COPY_CTOR; 
+	template <class U> inline json_allocator(const json_allocator<U>&) json_nothrow {
+		//LIBJSON_COPY_CTOR;
 	}
-	inline ~json_allocator() json_nothrow { 
-		//LIBJSON_DTOR; 
+	inline ~json_allocator() json_nothrow {
+		//LIBJSON_DTOR;
 	}
-	
+
 	inline pointer address(reference x) const { return &x; }
 	inline const_pointer address(const_reference x) const { return &x; }
-	
+
 	inline pointer allocate(size_type n, json_allocator<void>::const_pointer = 0) json_hot {
 		return (pointer)JSONAllocatorRelayer::alloc(n * sizeof(T));
 	}
 	inline void deallocate(pointer p, size_type) json_hot {
 		JSONAllocatorRelayer::dealloc(p);
 	}
-	
+
 	inline size_type max_size() const json_nothrow { return 0xEFFFFFFF; }
-	
+
 	inline void construct(pointer p, const T& val){
 		new(p)T(val);
 	};

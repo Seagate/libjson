@@ -5,6 +5,10 @@
 #include "JSONChildren.h"
 #include "JSONMemory.h"
 #include "JSONGlobals.h"
+#include <cmath>
+#include <limits>
+#include <type_traits>
+#include <algorithm>
 #ifdef JSON_DEBUG
     #include <climits>  //to check int value
 #endif
@@ -80,7 +84,7 @@ class JSONNode;  //forward declaration
 
 class internalJSONNode {
 public:
-	LIBJSON_OBJECT(internalJSONNode);
+	LIBJSON_OBJECT(internalJSONNode)
     internalJSONNode(char mytype = JSON_NULL) json_nothrow json_hot;
     #ifdef JSON_READ_PRIORITY
 	   internalJSONNode(const json_string & unparsed) json_nothrow json_hot;
@@ -293,7 +297,7 @@ public:
     #endif
 };
 
-inline internalJSONNode::internalJSONNode(char mytype) json_nothrow : _type(mytype), _name(), _name_encoded(), _string(), _string_encoded(), _value()
+inline internalJSONNode::internalJSONNode(char mytype) json_nothrow : _type(static_cast<unsigned char>(mytype)), _numtype(), _name(), _name_encoded(), _string(), _string_encoded(), _value()
     initializeMutex(0)
     initializeRefCount(1)
     initializeFetch(true)
@@ -373,11 +377,37 @@ inline bool internalJSONNode::IsEqualTo(bool val) const json_nothrow {
     return val == _value._bool;
 }
 
+// Helper overloads picked by enable_if to avoid compiling both branches
+namespace {
+    template<typename T>
+    inline typename std::enable_if<std::is_floating_point<T>::value, bool>::type
+    IsEqualToNum_impl(const internalJSONNode * node, T val) {
+        json_number lhs = static_cast<json_number>(val);
+        json_number rhs = node->_value._number;
+        json_number diff = std::fabs(lhs - rhs);
+        json_number eps = std::numeric_limits<json_number>::epsilon() * std::max<json_number>(static_cast<json_number>(1), std::fabs(rhs));
+        return diff <= eps;
+    }
+
+    template<typename T>
+    inline typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
+    IsEqualToNum_impl(const internalJSONNode * node, T val) {
+        json_number n = node->_value._number;
+        json_number intpart = 0;
+        json_number frac = std::modf(n, &intpart);
+        json_number eps = std::numeric_limits<json_number>::epsilon() * std::max<json_number>(static_cast<json_number>(1), std::fabs(n));
+        if (std::fabs(frac) > eps) return false;
+        // ensure integer fits in T
+        if (intpart < static_cast<json_number>(std::numeric_limits<T>::min()) || intpart > static_cast<json_number>(std::numeric_limits<T>::max())) return false;
+        return static_cast<T>(intpart) == val;
+    }
+}
+
 template<typename T>
 inline bool internalJSONNode::IsEqualToNum(T val) const json_nothrow {
     if (type() != JSON_NUMBER) return false;
     Fetch();
-    return (json_number)val == _value._number;
+    return IsEqualToNum_impl<T>(this, val);
 }
 
 #ifdef JSON_REF_COUNT
@@ -460,12 +490,12 @@ inline JSONNode * internalJSONNode::at(json_index_t pos) json_nothrow {
     #endif
 
     #define IMP_SMALLER_INT_CAST_OP(_type, type_max, type_min)\
-	   inline internalJSONNode::operator _type() const json_nothrow {\
-		  JSON_ASSERT(_value._number > type_min, _string + json_global(ERROR_LOWER_RANGE) + JSON_TEXT(#_type));\
-		  JSON_ASSERT(_value._number < type_max, _string + json_global(ERROR_UPPER_RANGE) + JSON_TEXT(#_type));\
-		  JSON_ASSERT(_value._number == (json_number)((_type)(_value._number)), json_string(JSON_TEXT("(")) + json_string(JSON_TEXT(#_type)) + json_string(JSON_TEXT(") will truncate ")) + _string);\
-		  return (_type)static_cast<BASE_CONVERT_TYPE>(*this);\
-	   }
+		inline internalJSONNode::operator _type() const json_nothrow {\
+			JSON_ASSERT(_value._number > type_min, _string + json_global(ERROR_LOWER_RANGE) + JSON_TEXT(#_type));\
+			JSON_ASSERT(_value._number < type_max, _string + json_global(ERROR_UPPER_RANGE) + JSON_TEXT(#_type));\
+			JSON_ASSERT(std::fabs(_value._number - (json_number)((_type)(_value._number))) < JSON_FLOAT_THRESHHOLD, json_string(JSON_TEXT("(")) + json_string(JSON_TEXT(#_type)) + json_string(JSON_TEXT(") will truncate ")) + _string);\
+			return (_type)static_cast<BASE_CONVERT_TYPE>(*this);\
+		}
 
     IMP_SMALLER_INT_CAST_OP(char, CHAR_MAX, CHAR_MIN)
     IMP_SMALLER_INT_CAST_OP(unsigned char, UCHAR_MAX, 0)

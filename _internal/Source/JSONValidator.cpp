@@ -270,14 +270,26 @@ bool JSONValidator::isValidString(const json_char * & ptr) json_nothrow {
 				case JSON_TEXT('t'):
 				    break;
 				case JSON_TEXT('u'):
-				    if (json_unlikely(!isHex(*++ptr))) return false;
-				    if (json_unlikely(!isHex(*++ptr))) return false;
-				    //fallthrough to \x
+				    if (json_unlikely(!isHex(*++ptr)))
+					{
+						return false;
+					}
+				    if (json_unlikely(!isHex(*++ptr)))
+					{
+						return false;
+					}
+				    json_fallthrough;
 				#ifndef JSON_STRICT
 				case JSON_TEXT('x'):  //hex
 				#endif
-				    if (json_unlikely(!isHex(*++ptr))) return false;
-				    if (json_unlikely(!isHex(*++ptr))) return false;
+				    if (json_unlikely(!isHex(*++ptr)))
+					{
+						return false;
+					}
+				    if (json_unlikely(!isHex(*++ptr)))
+					{
+						return false;
+					}
 				    break;
 				#ifdef JSON_OCTAL
 				    #ifdef __GNUC__
@@ -292,8 +304,14 @@ bool JSONValidator::isValidString(const json_char * & ptr) json_nothrow {
 				    case JSON_TEXT('6'):
 				    case JSON_TEXT('7'):
 				    #endif
-					   if (json_unlikely((*++ptr < JSON_TEXT('0')) || (*ptr > JSON_TEXT('7')))) return false;
-					   if (json_unlikely((*++ptr < JSON_TEXT('0')) || (*ptr > JSON_TEXT('7')))) return false;
+					   if (json_unlikely((*++ptr < JSON_TEXT('0')) || (*ptr > JSON_TEXT('7'))))
+					   {
+						return false;
+					   }
+					   if (json_unlikely((*++ptr < JSON_TEXT('0')) || (*ptr > JSON_TEXT('7'))))
+					   {
+							return false;
+					   }
 					   break;
 				#endif
 				default:

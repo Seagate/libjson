@@ -5,11 +5,11 @@
 #include "JSONValidator.h"
 
 
-JSONStream::JSONStream(json_stream_callback_t call_p, json_stream_e_callback_t call_e, void * callbackIdentifier) json_nothrow : state(true), call(call_p), err_call(call_e), buffer(), callback_identifier(callbackIdentifier) {
+JSONStream::JSONStream(json_stream_callback_t call_p, json_stream_e_callback_t call_e, void * callbackIdentifier) json_nothrow : buffer(), call(call_p), err_call(call_e), callback_identifier(callbackIdentifier), state(true) {
 	LIBJSON_CTOR;
 }
 
-JSONStream::JSONStream(const JSONStream & orig) json_nothrow : state(orig.state), call(orig.call), err_call(orig.err_call), buffer(orig.buffer), callback_identifier(orig.callback_identifier){
+JSONStream::JSONStream(const JSONStream & orig) json_nothrow : buffer(orig.buffer), call(orig.call), err_call(orig.err_call), callback_identifier(orig.callback_identifier), state(orig.state){
 	LIBJSON_COPY_CTOR;
 }
 
@@ -76,9 +76,9 @@ JSONStream & JSONStream::operator =(const JSONStream & orig) json_nothrow {
 	#define STREAM_FIND_NEXT_RELEVANT(ch, vt, po) FindNextRelevant(ch, vt, po)
 	size_t JSONStream::FindNextRelevant(json_char ch, const json_string & value_t, const size_t pos) json_nothrow {
 #endif
-    const json_char * start = value_t.c_str();
-    for (const json_char * p = start + pos; *p; ++p){
-	   if (json_unlikely(*p == ch)) return p - start;
+	 const json_char * start = value_t.c_str();
+	 for (const json_char * p = start + pos; *p; ++p){
+		 if (json_unlikely(*p == ch)) return static_cast<size_t>(reinterpret_cast<uintptr_t>(p) - reinterpret_cast<uintptr_t>(start));
 	   switch (*p){
 			 BRACKET_STREAM(JSON_TEXT('['), JSON_TEXT(']'))
 			 BRACKET_STREAM(JSON_TEXT('{'), JSON_TEXT('}'))
@@ -114,21 +114,21 @@ void JSONStream::parse(void) json_nothrow {
 				 #endif
 			  END_MEM_SCOPE
 			  json_string::iterator beginning = buffer.begin();
-			  buffer.erase(beginning, beginning + end);
+			  buffer.erase(beginning, beginning + static_cast<json_string::difference_type>(end));
 			  continue; //parse();  //parse the next object too
 		   }
 		   #ifdef JSON_SAFE
 				else {
 					//verify that what's in there is at least valid so far
 					#ifndef JSON_VALIDATE
-						#error In order to use safe mode and streams, JSON_VALIDATE needs to be defined			
+						#error In order to use safe mode and streams, JSON_VALIDATE needs to be defined
 					#endif
-					
+
 					json_auto<json_char> s;
 					size_t len;
 					s.set(JSONWorker::RemoveWhiteSpace(json_string(buffer.c_str() + pos), len, false));
-					
-					
+
+
 					if (!JSONValidator::isValidPartialRoot(s.ptr)){
 						if (err_call) err_call(getIdentifier());
 						state = false;
