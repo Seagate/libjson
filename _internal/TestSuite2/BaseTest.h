@@ -9,7 +9,7 @@ class libjson_CodeCoverage;
 class BaseTest {
 public:
 	BaseTest(const std::string & name) : _name(name), coverage(0) {}
-	virtual ~BaseTest(void){};
+	virtual ~BaseTest(void){}
 	virtual void setUp(const std::string & methodName){ UnitTest::SetPrefix(_name + "::" + methodName); }
 	virtual void tearDown(void){}
 protected:
