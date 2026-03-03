@@ -136,22 +136,22 @@ public:
 	assertTrue(UnitTest::_floatsAreEqual(one, two))
 
 #define assertEquals(one, two)\
-    assertTrue((one) == (two))
+    assertTrue((static_cast<json_number>(one)) == (static_cast<json_number>(two)))
 
 #define assertNotEquals(one, two)\
-    assertTrue((one) != (two))
+    assertTrue((static_cast<json_number>(one)) != (static_cast<json_number>(two)))
 
 #define assertGreaterThan(one, two)\
-    assertTrue((one) > (two))
+    assertTrue((static_cast<json_number>(one)) > (static_cast<json_number>(two)))
 
 #define assertGreaterThanEqualTo(one, two)\
-    assertTrue((one) >= (two))
+    assertTrue((static_cast<json_number>(one)) >= (static_cast<json_number>(two)))
 
 #define assertLessThan(one, two)\
-    assertTrue((one) < (two))
+    assertTrue((static_cast<json_number>(one)) < (static_cast<json_number>(two)))
 
 #define assertLessThanEqualTo(one, two)\
-    assertTrue((one) <= (two))
+    assertTrue((static_cast<json_number>(one)) <= (static_cast<json_number>(two)))
 
 
 
