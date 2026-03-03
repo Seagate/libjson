@@ -156,22 +156,26 @@ public:
 
 
 #define assertEquals_Primitive(one, two)\
-    assertTrue_Primitive(static_cast<json_number>(one) == (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
+    assertTrue_Primitive( \
+        static_cast<json_number>(one) == static_cast<json_number>(two), \
+        static_cast<json_number>(one), \
+         static_cast<json_number>(two) \
+    )
 
 #define assertNotEquals_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>one) != (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
+    assertTrue_Primitive((static_cast<json_number>(one)) != (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
 
 #define assertGreaterThan_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>one) > (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
+    assertTrue_Primitive((static_cast<json_number>(one)) > (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
 
 #define assertGreaterThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>one) >= (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
+    assertTrue_Primitive((static_cast<json_number>(one)) >= (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
 
 #define assertLessThan_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>one) < (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
+    assertTrue_Primitive((static_cast<json_number>(one)) < (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
 
 #define assertLessThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>one) <= (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
+    assertTrue_Primitive((static_cast<json_number>(one)) <= (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
 
 #define assertNull(one)\
     assertTrue(one == NULL);
