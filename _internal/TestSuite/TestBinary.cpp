@@ -5,10 +5,10 @@
     void TestSuite::TestBase64(void){
 	   UnitTest::SetPrefix("TestBinary.cpp - Base 64");
 
-	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"A", 1)), "A");
-	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"AB", 2)), "AB");
-	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABC", 3)), "ABC");
-	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCD", 4)), "ABCD");
+	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"A", 1)), "A");
+	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"AB", 2)), "AB");
+	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABC", 3)), "ABC");
+	   assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCD", 4)), "ABCD");
 	   #ifdef JSON_SAFE
           assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"", 0)), "");
 		  assertEquals(JSONBase64::json_decode64(JSON_TEXT("123!abc")), "");
