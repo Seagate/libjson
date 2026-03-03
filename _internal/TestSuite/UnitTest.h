@@ -156,7 +156,7 @@ inline bool equals_json(json_number n1, json_number n2)
     return n1 == n2;
 }
 #define assertEquals(one, two)\
-    assertTrue(equals_jso(one,two))
+    assertTrue(equals_json(one,two))
 
 #define assertNotEquals(one, two)\
     assertTrue((static_cast<json_number>(one)) != (static_cast<json_number>(two)))
