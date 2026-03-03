@@ -156,22 +156,22 @@ public:
 
 
 #define assertEquals_Primitive(one, two)\
-    assertTrue_Primitive((one) == (two), one, two)
+    assertTrue_Primitive(static_cast<double>(one) == (static_cast<double>two), static_cast<double>one, static_cast<double>two)
 
 #define assertNotEquals_Primitive(one, two)\
-    assertTrue_Primitive((one) != (two), one, two)
+    assertTrue_Primitive((static_cast<double>one) != (static_cast<double>two), static_cast<double>one, static_cast<double>two)
 
 #define assertGreaterThan_Primitive(one, two)\
-    assertTrue_Primitive((one) > (two), one, two)
+    assertTrue_Primitive((static_cast<double>one) > (static_cast<double>two), static_cast<double>one, static_cast<double>two)
 
 #define assertGreaterThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((one) >= (two), one, two)
+    assertTrue_Primitive((static_cast<double>one) >= (static_cast<double>two), static_cast<double>one, static_cast<double>two)
 
 #define assertLessThan_Primitive(one, two)\
-    assertTrue_Primitive((one) < (two), one, two)
+    assertTrue_Primitive((static_cast<double>one) < (static_cast<double>two), static_cast<double>one, static_cast<double>two)
 
 #define assertLessThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((one) <= (two), one, two)
+    assertTrue_Primitive((static_cast<double>one) <= (static_cast<double>two), static_cast<double>one, static_cast<double>two)
 
 #define assertNull(one)\
     assertTrue(one == NULL);
