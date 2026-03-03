@@ -136,7 +136,7 @@ public:
 #define assertFloatEquals(one, two)\
 	assertTrue(UnitTest::_floatsAreEqual(one, two))
 
-inline bool equals_json(const json_string& s1, const json_string& s2)
+inline bool equals_json(const std::string& s1, const std::string& s2)
 {
     return s1 == s2;
 }
