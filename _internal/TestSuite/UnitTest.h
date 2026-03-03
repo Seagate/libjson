@@ -156,22 +156,22 @@ public:
 
 
 #define assertEquals_Primitive(one, two)\
-    assertTrue_Primitive(static_cast<double>(one) == (static_cast<double>two), static_cast<double>one, static_cast<double>two)
+    assertTrue_Primitive(static_cast<json_number>(one) == (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
 
 #define assertNotEquals_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<double>one) != (static_cast<double>two), static_cast<double>one, static_cast<double>two)
+    assertTrue_Primitive((static_cast<json_number>one) != (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
 
 #define assertGreaterThan_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<double>one) > (static_cast<double>two), static_cast<double>one, static_cast<double>two)
+    assertTrue_Primitive((static_cast<json_number>one) > (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
 
 #define assertGreaterThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<double>one) >= (static_cast<double>two), static_cast<double>one, static_cast<double>two)
+    assertTrue_Primitive((static_cast<json_number>one) >= (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
 
 #define assertLessThan_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<double>one) < (static_cast<double>two), static_cast<double>one, static_cast<double>two)
+    assertTrue_Primitive((static_cast<json_number>one) < (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
 
 #define assertLessThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<double>one) <= (static_cast<double>two), static_cast<double>one, static_cast<double>two)
+    assertTrue_Primitive((static_cast<json_number>one) <= (static_cast<json_number>two), static_cast<json_number>one, static_cast<json_number>two)
 
 #define assertNull(one)\
     assertTrue(one == NULL);
