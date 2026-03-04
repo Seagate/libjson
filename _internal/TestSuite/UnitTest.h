@@ -135,7 +135,10 @@ public:
 
 #define assertFloatEquals(one, two)\
 	assertTrue(UnitTest::_floatsAreEqual(one, two))
-
+inline bool equals_json(const char* s1, const char* s2)
+{
+    return strcmp(s1, s2) == 0;
+}
 inline bool equals_json(const std::string* s1, const char* s2)
 {
     return s1 && s2 && *s1 == s2;
@@ -153,12 +156,12 @@ inline bool equals_json(const std::string*& s1, const std::string*& s2)
 
 inline bool equals_json(const json_string*& s, json_number n)
 {
-    return std::stod(s) == n;
+    return atof(s) == n;
 }
 
 inline bool equals_json(json_number n, const json_string*& s)
 {
-    return n == std::stod(s);
+    return n == atof(s);
 }
 
 inline bool equals_json(json_number n1, json_number n2)
