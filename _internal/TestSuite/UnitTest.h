@@ -156,12 +156,12 @@ inline bool equals_json(const std::string*& s1, const std::string*& s2)
 
 inline bool equals_json(const json_string*& s, json_number n)
 {
-    return atof(s) == n;
+    return atof(s->c_str()) == n;
 }
 
 inline bool equals_json(json_number n, const json_string*& s)
 {
-    return n == atof(s);
+    return n == atof(s->c_str());
 }
 
 inline bool equals_json(json_number n1, json_number n2)
