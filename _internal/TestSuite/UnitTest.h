@@ -264,3 +264,38 @@ inline bool equals_json(json_number n1, json_number n2)
     }
 
 #endif
+inline bool equals_json(const char* s1, const char* s2)
+{
+    if (!s1 || !s2) return s1 == s2;
+    return strcmp(s1, s2) == 0;
+}
+
+inline bool equals_json(const std::string& s1, const char* s2)
+{
+    return s2 && s1 == s2;
+}
+
+inline bool equals_json(const char* s1, const std::string& s2)
+{
+    return s1 && s1 == s2;
+}
+
+inline bool equals_json(const std::string& s1, const std::string& s2)
+{
+    return s1 == s2;
+}
+
+inline bool equals_json(const json_string& s, json_number n)
+{
+    return UnitTest::_floatsAreEqual(atof(s.c_str()), n);
+}
+
+inline bool equals_json(json_number n, const json_string& s)
+{
+    return UnitTest::_floatsAreEqual(n, atof(s.c_str()));
+}
+
+inline bool equals_json(json_number n1, json_number n2)
+{
+    return UnitTest::_floatsAreEqual(n1, n2);
+}
