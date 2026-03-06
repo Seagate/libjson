@@ -5,8 +5,8 @@
 #include "JSONGlobals.h"
 
 internalJSONNode::internalJSONNode(const internalJSONNode & orig) json_nothrow :
-    _type(orig._type), _name(orig._name), _name_encoded(orig._name_encoded),
-    _string(orig._string), _string_encoded(orig._string_encoded), _value(orig._value)
+	_type(orig._type), _numtype(orig._numtype), _name(orig._name), _name_encoded(orig._name_encoded),
+	_string(orig._string), _string_encoded(orig._string_encoded), _value(orig._value)
     initializeMutex(0)
     initializeRefCount(1)
     initializeFetch(orig.fetched)
@@ -37,7 +37,7 @@ internalJSONNode::internalJSONNode(const internalJSONNode & orig) json_nothrow :
 
 //this one is specialized because the root can only be array or node
 #ifdef JSON_READ_PRIORITY /*-> JSON_READ_PRIORITY */
-internalJSONNode::internalJSONNode(const json_string & unparsed) json_nothrow : _type(), _name(),_name_encoded(false), _string(unparsed), _string_encoded(), _value()
+internalJSONNode::internalJSONNode(const json_string & unparsed) json_nothrow : _type(), _numtype(), _name(),_name_encoded(false), _string(unparsed), _string_encoded(), _value()
     initializeMutex(0)
     initializeRefCount(1)
     initializeFetch(false)
@@ -75,7 +75,7 @@ internalJSONNode::internalJSONNode(const json_string & unparsed) json_nothrow : 
 	   case JSON_TEXT(x)
 #endif
 
-internalJSONNode::internalJSONNode(const json_string & name_t, const json_string & value_t) json_nothrow : _type(), _name_encoded(), _name(JSONWorker::FixString(name_t, NAME_ENCODED)), _string(), _string_encoded(), _value()
+internalJSONNode::internalJSONNode(const json_string & name_t, const json_string & value_t) json_nothrow : _type(), _numtype(), _name(JSONWorker::FixString(name_t, NAME_ENCODED)), _name_encoded(), _string(), _string_encoded(), _value()
     initializeMutex(0)
     initializeRefCount(1)
     initializeFetch(false)
@@ -542,8 +542,8 @@ internalJSONNode::operator bool() const json_nothrow {
 				FetchNumber();
 		  }
 	   #endif /*<- */
-	   JSON_ASSERT(type() == JSON_NUMBER, json_global(ERROR_UNDEFINED) + JSON_TEXT("as_int"));
-	   JSON_ASSERT(_value._number == (json_number)((json_int_t)_value._number), json_string(JSON_TEXT("as_int will truncate ")) + _string);
+	JSON_ASSERT(type() == JSON_NUMBER, json_global(ERROR_UNDEFINED) + JSON_TEXT("as_int"));
+	JSON_ASSERT(std::fabs(_value._number - (json_number)((json_int_t)_value._number)) < JSON_FLOAT_THRESHHOLD, json_string(JSON_TEXT("as_int will truncate ")) + _string);
 	   return (json_int_t)_value._number;
     }
 #else /*<- else */
@@ -603,7 +603,7 @@ internalJSONNode::operator bool() const json_nothrow {
 		  JSON_ASSERT(type() == JSON_NUMBER, json_global(ERROR_UNDEFINED) + JSON_TEXT("(long)"));
 		  JSON_ASSERT(_value._number > LONG_MIN, _string + json_global(ERROR_LOWER_RANGE) + JSON_TEXT("long"));
 		  JSON_ASSERT(_value._number < LONG_MAX, _string + json_global(ERROR_UPPER_RANGE) + JSON_TEXT("long"));
-		  JSON_ASSERT(_value._number == (json_number)((long)_value._number), json_string(JSON_TEXT("(long) will truncate ")) + _string);
+		  JSON_ASSERT(std::fabs(_value._number - (json_number)((long)_value._number)) < JSON_FLOAT_THRESHHOLD, json_string(JSON_TEXT("(long) will truncate ")) + _string);
 		  return (long)_value._number;
 	   #else /*<- else */
 		  JSON_ASSERT(type() == JSON_NUMBER, json_global(ERROR_UNDEFINED) + JSON_TEXT("(long long)"));
@@ -618,7 +618,7 @@ internalJSONNode::operator bool() const json_nothrow {
 			 JSON_ASSERT(_value._number > LLONG_MIN, _string + json_global(ERROR_LOWER_RANGE) + JSON_TEXT("long long"));
 		  #endif
 
-		  JSON_ASSERT(_value._number == (json_number)((long long)_value._number), json_string(JSON_TEXT("(long long) will truncate ")) + _string);
+		  JSON_ASSERT(std::fabs(_value._number - (json_number)((long long)_value._number)) < JSON_FLOAT_THRESHHOLD, json_string(JSON_TEXT("(long long) will truncate ")) + _string);
 		  return (long long)_value._number;
 	   #endif /*<- */
     }
@@ -644,7 +644,7 @@ internalJSONNode::operator bool() const json_nothrow {
 		  JSON_ASSERT(type() == JSON_NUMBER, json_global(ERROR_UNDEFINED) + JSON_TEXT("(unsigned long)"));
 		  JSON_ASSERT(_value._number > 0, _string + json_global(ERROR_LOWER_RANGE) + JSON_TEXT("unsigned long"));
 		  JSON_ASSERT(_value._number < ULONG_MAX, _string + json_global(ERROR_UPPER_RANGE) + JSON_TEXT("unsigned long"));
-		  JSON_ASSERT(_value._number == (json_number)((unsigned long)_value._number), json_string(JSON_TEXT("(unsigend long) will truncate ")) + _string);
+		  JSON_ASSERT(std::fabs(_value._number - (json_number)((unsigned long)_value._number)) < JSON_FLOAT_THRESHHOLD, json_string(JSON_TEXT("(unsigend long) will truncate ")) + _string);
 		  return (unsigned long)_value._number;
 	   #else /*<- else */
 		  JSON_ASSERT(type() == JSON_NUMBER, json_global(ERROR_UNDEFINED) + JSON_TEXT("(unsigned long long)"));
@@ -654,7 +654,7 @@ internalJSONNode::operator bool() const json_nothrow {
 		  #elif defined(ULLONG_MAX)
 			 JSON_ASSERT(_value._number < ULLONG_MAX, _string + json_global(ERROR_UPPER_RANGE) + JSON_TEXT("unsigned long long"));
 		  #endif
-		  JSON_ASSERT(_value._number == (json_number)((unsigned long long)_value._number), json_string(JSON_TEXT("(unsigned long long) will truncate ")) + _string);
+		  JSON_ASSERT(std::fabs(_value._number - (json_number)((unsigned long long)_value._number)) < JSON_FLOAT_THRESHHOLD, json_string(JSON_TEXT("(unsigned long long) will truncate ")) + _string);
 		  return (unsigned long long)_value._number;
 	   #endif /*<- */
     }

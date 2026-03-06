@@ -4,6 +4,8 @@
 #include "JSONMemory.h"
 #include "JSONDebug.h"  //for JSON_ASSERT macro
 
+#include <inttypes.h>  //for uintptr_t
+
 #ifdef JSON_LESS_MEMORY
     #ifdef __GNUC__
 	   #pragma pack(push, 1)
@@ -36,7 +38,7 @@ class JSONNode;  //forward declaration
 
 class jsonChildren {
 public:
-	LIBJSON_OBJECT(jsonChildren);
+	LIBJSON_OBJECT(jsonChildren)
     //starts completely empty and the array is not allocated
     jsonChildren(void) json_nothrow : array(0), mysize(0), mycapacity(0) {
 	   LIBJSON_CTOR;
@@ -130,9 +132,9 @@ public:
 	template <bool reverse>
     struct iteratorKeeper {
     public:
-		LIBJSON_OBJECT(jsonChildren::iteratorKeeper);
-	  iteratorKeeper(jsonChildren * pthis, JSONNode ** & position) json_nothrow :
-		 myRelativeOffset(reverse ? (json_index_t)(pthis -> array + (size_t)pthis -> mysize - position) : (json_index_t)(position - pthis -> array)),
+		LIBJSON_OBJECT(jsonChildren::iteratorKeeper)
+		iteratorKeeper(jsonChildren * pthis, JSONNode ** & position) json_nothrow :
+			myRelativeOffset(reverse ? (json_index_t)(static_cast<json_index_t>(reinterpret_cast<uintptr_t>(pthis->array + static_cast<size_t>(pthis->mysize)) - reinterpret_cast<uintptr_t>(position))) : (json_index_t)(static_cast<json_index_t>(reinterpret_cast<uintptr_t>(position) - reinterpret_cast<uintptr_t>(pthis->array)))),
 		 myChildren(pthis),
 		 myPos(position){
 			LIBJSON_CTOR;
@@ -161,7 +163,7 @@ public:
 	   JSON_ASSERT(array != 0, JSON_TEXT("erasing something from a null array 1"));
 	   JSON_ASSERT(position >= array, JSON_TEXT("position is beneath the start of the array 1"));
 	   JSON_ASSERT(position <= array + mysize, JSON_TEXT("erasing out of bounds 1"));
-	   std::memmove(position, position + 1, (mysize-- - (position - array) - 1) * sizeof(JSONNode *));
+	   std::memmove(position, position + 1, (static_cast<size_t>(mysize--) - static_cast<size_t>(reinterpret_cast<uintptr_t>(position) - reinterpret_cast<uintptr_t>(array)) - 1) * sizeof(JSONNode *));
 	   iteratorKeeper<false> ik(this, position);
 	   shrink();
     }
@@ -196,14 +198,14 @@ public:
 		if (reverse){
 			iteratorKeeper<true> ik(this, position);
 			inc();
-		} else 
+		} else
 		#endif
 		{
 			iteratorKeeper<false> ik(this, position);
 			inc();
 		}
 
-	   std::memmove(position + 1, position, (mysize++ - (position - array)) * sizeof(JSONNode *));
+	std::memmove(position + 1, position, (static_cast<size_t>(mysize++) - static_cast<size_t>(reinterpret_cast<uintptr_t>(position) - reinterpret_cast<uintptr_t>(array))) * sizeof(JSONNode *));
 	   *position = item;
     }
 
@@ -215,7 +217,7 @@ public:
 		  iteratorKeeper<false> ik(this, position);
 		  inc(num);
 	   }
-	   const size_t ptrs = ((JSONNode **)(array + mysize)) - position;
+	const size_t ptrs = static_cast<size_t>(((reinterpret_cast<uintptr_t>(array) + static_cast<uintptr_t>(mysize)) - reinterpret_cast<uintptr_t>(position)));
 	   std::memmove(position + num, position, ptrs * sizeof(JSONNode *));
 	   std::memcpy(position, items, num * sizeof(JSONNode *));
 	   mysize += num;
@@ -281,7 +283,7 @@ JSON_PROTECTED
 #ifdef JSON_LESS_MEMORY
     class jsonChildren_Reserved : public jsonChildren {
     public:
-		LIBJSON_OBJECT(jsonChildren_Reserved);
+		LIBJSON_OBJECT(jsonChildren_Reserved)
 	   jsonChildren_Reserved(jsonChildren * orig, json_index_t siz) json_nothrow : jsonChildren(orig -> array, orig -> mysize, orig -> mycapacity), myreserved(siz) {
 		  orig -> array = 0;
 		  deleteChildren(orig);

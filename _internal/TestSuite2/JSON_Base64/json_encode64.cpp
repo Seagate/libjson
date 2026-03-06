@@ -9,19 +9,19 @@ void testJSON_Base64__json_encode64::testReverseEachOther(void){
         #ifdef JSON_SAFE
     		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"", 0)), "");
         #endif
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"A", 1)), "A");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"AB", 2)), "AB");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABC", 3)), "ABC");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCD", 4)), "ABCD");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDE", 5)), "ABCDE");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEF", 6)), "ABCDEF");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEFG", 7)), "ABCDEFG");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEFGH", 8)), "ABCDEFGH");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEFGHI", 9)), "ABCDEFGHI");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEFGHIJ", 10)), "ABCDEFGHIJ");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEFGHIJK", 11)), "ABCDEFGHIJK");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEFGHIJKL", 12)), "ABCDEFGHIJKL");
-		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((unsigned char *)"ABCDEFGHIJKLM", 13)), "ABCDEFGHIJKLM");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"A", 1)), "A");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"AB", 2)), "AB");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABC", 3)), "ABC");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCD", 4)), "ABCD");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDE", 5)), "ABCDE");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEF", 6)), "ABCDEF");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEFG", 7)), "ABCDEFG");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEFGH", 8)), "ABCDEFGH");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEFGHI", 9)), "ABCDEFGHI");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEFGHIJ", 10)), "ABCDEFGHIJ");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEFGHIJK", 11)), "ABCDEFGHIJK");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEFGHIJKL", 12)), "ABCDEFGHIJKL");
+		assertEquals(JSONBase64::json_decode64(JSONBase64::json_encode64((const unsigned char *)"ABCDEFGHIJKLM", 13)), "ABCDEFGHIJKLM");
 #endif
 }
 

@@ -3,7 +3,25 @@
 
 #if !defined(__GNUC__) && !defined(_MSC_VER)
 
-    #define json_deprecated(method, warning) method
+    #if !defined (json_fallthrough) && defined (__cpp_attributes) && defined (__has_cpp_attribute)
+	    #if __has_cpp_attribute(fallthrough)
+	        #define json_fallthrough [[fallthrough]]
+		#endif
+	#endif
+
+    #if !defined (json_fallthrough)
+        #define json_fallthrough /* FALLTHRU */
+    #endif
+
+    #if !defined (json_deprecated)
+        #if defined (__cpp_attributes) && defined (__has_cpp_attribute)
+            #if __has_cpp_attribute(deprecated)
+                #define json_deprecated(method, warning) method [[deprecated(warning)]]
+            #endif
+        #endif
+    #else
+	    #define json_deprecated(method, warning) method
+    #endif
 
     #define json_nothrow
     #define json_throws(x)

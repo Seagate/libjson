@@ -8,7 +8,7 @@
 
 
 /*
- *  JSON_LIBRARY must be declared if libjson is compiled as a static or dynamic 
+ *  JSON_LIBRARY must be declared if libjson is compiled as a static or dynamic
  *  library.  This exposes a C-style interface, but none of the inner workings of libjson
  */
 #define JSON_LIBRARY
@@ -21,9 +21,9 @@
 
 
 /*
- *  JSON_DEBUG is used to perform extra error checking.  Because libjson usually 
+ *  JSON_DEBUG is used to perform extra error checking.  Because libjson usually
  *  does on the fly parsing, validation is impossible, so this option will allow
- *  you to register an error callback so that you can record what is going wrong 
+ *  you to register an error callback so that you can record what is going wrong
  *  before the library crashes.  This option does not protect from these errors,
  *  it simply tells you about them, which is nice for debugging, but not preferable
  *  for release candidates
@@ -43,11 +43,11 @@
  *  from the errors that it encounters.  This option is recommended for those who
  *  feel it's possible for their program to encounter invalid json.
  */
-#define JSON_SAFE
+//#define JSON_SAFE
 
 
 /*
- *  JSON_STDERROR routes error messages to cerr instead of a callback, this 
+ *  JSON_STDERROR routes error messages to cerr instead of a callback, this
  *  option hides the callback registering function.  This will usually display
  *  messages in the console
  */
@@ -113,7 +113,7 @@
 
 
 /*
- *  JSON_STREAM turns on libjson's streaming functionality.  This allows you to give parts of 
+ *  JSON_STREAM turns on libjson's streaming functionality.  This allows you to give parts of
  *  your json into a stream, which will automatically hit a callback when full nodes are
  *  completed
  */
@@ -141,7 +141,7 @@
 /*
  *	JSON_MEMORY_POOL Turns on libjson's iteraction with mempool++.  It is more efficient that simply
  *	connecting mempool++ to the callbacks because it integrates things internally and uses a number
- *	of memory pools.  This value tells libjson how large of a memory pool to start out with.  500KB 
+ *	of memory pools.  This value tells libjson how large of a memory pool to start out with.  500KB
  *	should suffice for most cases.  libjson will distribute that within the pool for the best
  *	performance depending on other settings.
  */
@@ -150,7 +150,7 @@
 
 /*
  *  JSON_MUTEX_CALLBACKS exposes functions to register callbacks to lock and unlock
- *  mutexs and functions to lock and unlock JSONNodes and all of it's children.  This 
+ *  mutexs and functions to lock and unlock JSONNodes and all of it's children.  This
  *  does not prevent other threads from accessing the node, but will prevent them from
  *  locking it. It is much easier for the end programmer to allow libjson to manage
  *  your mutexs because of reference counting and manipulating trees, libjson automatically
@@ -179,6 +179,24 @@
  */
 //#define JSON_OCTAL
 
+#ifndef JSON_PRIORITY_LOW
+#define JSON_PRIORITY_LOW 0
+#endif
+#ifndef JSON_PRIORITY_MED
+#define JSON_PRIORITY_MED 1
+#endif
+#ifndef JSON_PRIORITY_HIGH
+#define JSON_PRIORITY_HIGH 2
+#endif
+#ifndef LOW
+#define LOW JSON_PRIORITY_LOW
+#endif
+#ifndef MED
+#define MED JSON_PRIORITY_MED
+#endif
+#ifndef HIGH
+#define HIGH JSON_PRIORITY_HIGH
+#endif
 
 /*
  *  JSON_WRITE_PRIORITY turns on libjson's writing capabilties.  Without this libjson can only
@@ -197,7 +215,7 @@
 
 /*
  *  JSON_NEWLINE affects how libjson writes.  If this option is turned on, libjson
- *  will use whatever it's defined as for the newline signifier, otherwise, it will use 
+ *  will use whatever it's defined as for the newline signifier, otherwise, it will use
  *  standard unix \n.
  */
 //#define JSON_NEWLINE "\r\n"  //\r\n is standard for most windows and dos programs
@@ -244,7 +262,7 @@
 
 /*
  *  JSON_ARRAY_SIZE_ON_ON_LINE allows you to put small arrays of primitives all on one line
- *  in a write_formatted.  This is common for tuples, like coordinates.  If must be defined 
+ *  in a write_formatted.  This is common for tuples, like coordinates.  If must be defined
  *  as an integer
  */
 //#define JSON_ARRAY_SIZE_ON_ONE_LINE 2
@@ -264,7 +282,7 @@
 
 
 /*
- *  JSON_INDEX_TYPE allows you th change the size type for the children functions. If this 
+ *  JSON_INDEX_TYPE allows you th change the size type for the children functions. If this
  *  option is not used then unsigned int is used.  This option is useful for cutting down
  *  on memory, or using huge numbers of child nodes (over 4 billion)
  */
@@ -273,7 +291,7 @@
 
 /*
  *  JSON_BOOL_TYPE lets you change the bool type for the C interface.  Because before C99 there
- *  was no bool, and even then it's just a typedef, you may want to use something else.  If this 
+ *  was no bool, and even then it's just a typedef, you may want to use something else.  If this
  *  is not defined, it will revert to int
  */
 //#define JSON_BOOL_TYPE char
@@ -321,13 +339,13 @@
  *  compatibility between major releases.  It is highly recommended that you move your functions
  *  over to the new equivalents
  */
-#define JSON_DEPRECATED_FUNCTIONS
+// #define JSON_DEPRECATED_FUNCTIONS
 
 
 /*
  *  JSON_CASTABLE allows you to call as_bool on a number and have it do the 0 or not 0 check,
  *  it also allows you to ask for a string from a number, or boolean, and have it return the right thing.
- *  Without this option, those types of requests are undefined.  It also exposes the as_array, as_node, and cast 
+ *  Without this option, those types of requests are undefined.  It also exposes the as_array, as_node, and cast
  *  functions
  */
 #define JSON_CASTABLE

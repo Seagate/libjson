@@ -149,8 +149,8 @@ void UnitTest::SaveTo(const std::string & location){
 	   std::string html(ToHTML());
 	   fwrite(html.c_str(), html.length(), 1, fp);
 	   fclose(fp);
-	   system("pwd");
-		std::cout << "Saved file to " << location << std::endl;
+	   int status = system("pwd");
+		std::cout << "Saved file to " << location << "with status of " << status <<std::endl;
     } else {
         std::cout << "Couldn't save file" << std::endl;
     }
