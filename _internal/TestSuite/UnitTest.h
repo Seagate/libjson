@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream>
 #include <cstring>
-#include "JSONDefs.h"
 
 #ifdef __GNUC__
     #define TEST_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
@@ -135,83 +134,44 @@ public:
 
 #define assertFloatEquals(one, two)\
 	assertTrue(UnitTest::_floatsAreEqual(one, two))
-/*
-inline bool equals_json(const char* s1, const char* s2)
-{
-    return strcmp(s1, s2) == 0;
-}
 
-inline bool equals_json(const std::string* s1, const char* s2)
-{
-    return s1 && s2 && *s1 == s2;
-}
-
-inline bool equals_json(const char* s1, const std::string* s2)
-{
-    return s1 && s2 && s1 == *s2;
-}
-
-inline bool equals_json(const std::string*& s1, const std::string*& s2)
-{
-    return s1 == s2;
-}
-
-inline bool equals_json(const json_string*& s, json_number n)
-{
-    return atof(s->c_str()) == n;
-}
-
-inline bool equals_json(json_number n, const json_string*& s)
-{
-    return n == atof(s->c_str());
-}
-
-inline bool equals_json(json_number n1, json_number n2)
-{
-    return n1 == n2;
-}
-*/
 #define assertEquals(one, two)\
-    assertTrue(equals_json(one,two))
+    assertTrue((one) == (two))
 
 #define assertNotEquals(one, two)\
-    assertTrue((static_cast<json_number>(one)) != (static_cast<json_number>(two)))
+    assertTrue((one) != (two))
 
 #define assertGreaterThan(one, two)\
-    assertTrue((static_cast<json_number>(one)) > (static_cast<json_number>(two)))
+    assertTrue((one) > (two))
 
 #define assertGreaterThanEqualTo(one, two)\
-    assertTrue((static_cast<json_number>(one)) >= (static_cast<json_number>(two)))
+    assertTrue((one) >= (two))
 
 #define assertLessThan(one, two)\
-    assertTrue((static_cast<json_number>(one)) < (static_cast<json_number>(two)))
+    assertTrue((one) < (two))
 
 #define assertLessThanEqualTo(one, two)\
-    assertTrue((static_cast<json_number>(one)) <= (static_cast<json_number>(two)))
+    assertTrue((one) <= (two))
 
 
 
 #define assertEquals_Primitive(one, two)\
-    assertTrue_Primitive( \
-        static_cast<json_number>(one) == static_cast<json_number>(two), \
-        static_cast<json_number>(one), \
-         static_cast<json_number>(two) \
-    )
+    assertTrue_Primitive((one) == (two), one, two)
 
 #define assertNotEquals_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>(one)) != (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
+    assertTrue_Primitive((one) != (two), one, two)
 
 #define assertGreaterThan_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>(one)) > (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
+    assertTrue_Primitive((one) > (two), one, two)
 
 #define assertGreaterThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>(one)) >= (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
+    assertTrue_Primitive((one) >= (two), one, two)
 
 #define assertLessThan_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>(one)) < (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
+    assertTrue_Primitive((one) < (two), one, two)
 
 #define assertLessThanEqualTo_Primitive(one, two)\
-    assertTrue_Primitive((static_cast<json_number>(one)) <= (static_cast<json_number>(two)), static_cast<json_number>(one), static_cast<json_number>(two))
+    assertTrue_Primitive((one) <= (two), one, two)
 
 #define assertNull(one)\
     assertTrue(one == NULL);
@@ -252,8 +212,8 @@ inline bool equals_json(json_number n1, json_number n2)
 	   bool failed = false;\
 	   try {\
 		  code;\
-    } catch (const exc &){\
-        PASS(std::string(#exc) + " caught");\
+	   } catch (exc){\
+		  PASS(std::string(#exc) + " caught");\
 		  failed = true;\
 	   }\
 	   if (test_unlikely(!failed)){ FAIL(std::string(#exc) + " not caught");}\
@@ -265,40 +225,5 @@ inline bool equals_json(json_number n1, json_number n2)
 	   somet << something;\
 	   UnitTest::echo_(somet.str());\
     }
-inline bool equals_json(const char* s1, const char* s2)
-{
-    if (!s1 || !s2) return s1 == s2;
-    return strcmp(s1, s2) == 0;
-}
 
-inline bool equals_json(const std::string& s1, const char* s2)
-{
-    return s2 && s1 == s2;
-}
-
-inline bool equals_json(const char* s1, const std::string& s2)
-{
-    return s1 && s1 == s2;
-}
-
-inline bool equals_json(const std::string& s1, const std::string& s2)
-{
-    return s1 == s2;
-}
-
-inline bool equals_json(const json_string& s, json_number n)
-{
-    return UnitTest::_floatsAreEqual(atof(s.c_str()), n);
-}
-
-inline bool equals_json(json_number n, const json_string& s)
-{
-    return UnitTest::_floatsAreEqual(n, atof(s.c_str()));
-}
-
-inline bool equals_json(json_number n1, json_number n2)
-{
-    return UnitTest::_floatsAreEqual(n1, n2);
-}
 #endif
-
