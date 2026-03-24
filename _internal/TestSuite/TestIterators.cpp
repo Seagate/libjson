@@ -50,7 +50,7 @@ void TestSuite::TestIterators(void){
 		  ++it_test;
 		  assertAutoCString(json_as_string(*it_test), JSON_TEXT("hello world"));
 		  it_test++;
-		  assertEquals(json_as_bool(*it_test++), true);
+		  assertEquals(static_cast<bool>(json_as_bool(*it_test++)), true);
 		  assertEquals(it_test, json_end(test));
 
 		  unsigned int i = 0;

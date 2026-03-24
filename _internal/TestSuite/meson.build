@@ -28,11 +28,17 @@ test_sources = [
 ]
 
 # Build test binary linked against the libjson static library from this subproject
+test_args = []
+if target_machine.system() == 'windows'
+    test_args += ['-D_CRT_SECURE_NO_WARNINGS']
+endif
+
 libjson_tests = executable(
     'libjson_testsuite',
     test_sources,
     include_directories: ['../Source', '../../'],
     dependencies: [libjson_dep, libjson_tests2_dep],
+    cpp_args: test_args,
 )
 
 test('libjson_testsuite', libjson_tests)

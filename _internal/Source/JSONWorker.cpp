@@ -331,14 +331,14 @@ json_char JSONWorker::Hex(const json_char * & pos) json_nothrow {
 	as this method is also used for \x
 	*/
     //First character
-    json_uchar hi = *pos++ - 48;
+    json_uchar hi = static_cast<unsigned char>(*pos++ - 48);
     if (hi > 48){  //A-F don't immediately follow 0-9, so have to pull them down a little
 	   hi -= 39;
     } else if (hi > 9){  //neither do a-f
 	   hi -= 7;
     }
     //second character
-    json_uchar lo = *pos - 48;
+    json_uchar lo = static_cast<unsigned char>(*pos - 48);
     if (lo > 48){  //A-F don't immediately follow 0-9, so have to pull them down a little
 	   lo -= 39;
     } else if (lo > 9){  //neither do a-f
@@ -505,11 +505,11 @@ void JSONWorker::SpecialChar(const json_char * & pos, const json_char * const en
 		  json_uchar hi = ((p & 0x00F0) >> 4) + 48;
 	   #else
 		  res += JSON_TEXT("00");
-		  json_uchar hi = (p >> 4) + 48;
+		  json_uchar hi = static_cast<unsigned char>((p >> 4) + 48);
 	   #endif
 	   //convert the character to be escaped into two digits between 0 and 15
 	   if (hi > 57) hi += 7; //A-F don't immediately follow 0-9, so have to further adjust those
-	   json_uchar lo = (p & 0x000F) + 48;
+	   json_uchar lo = static_cast<unsigned char>((p & 0x000F) + 48);
 	   if (lo > 57) lo += 7; //A-F don't immediately follow 0-9, so have to further adjust those
 	res += static_cast<json_char>(hi);
 	res += static_cast<json_char>(lo);

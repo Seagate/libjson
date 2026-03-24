@@ -41,7 +41,7 @@ void TestSuite::TestFunctions(void){
 
 		  assertEquals_Primitive(json_as_int(json_at(dup, 0)), 15);
 		  assertEquals_Primitive(json_as_float(json_at(dup, 1)), 27.4f);
-		  assertEquals(json_as_bool(json_at(dup, 2)), true);
+		  assertEquals(static_cast<bool>(json_as_bool(json_at(dup, 2))), true);
 		  assertTrue(json_equal(json_at(dup, 0), json_at(node, 0)));
 		  assertTrue(json_equal(json_at(dup, 1), json_at(node, 1)));
 		  assertTrue(json_equal(json_at(dup, 2), json_at(node, 2)));
@@ -74,10 +74,9 @@ void TestSuite::TestFunctions(void){
 			  json_cast(test2, JSON_BOOL);
 			  assertEquals(json_type(test1), JSON_NULL);
 			  assertEquals(json_type(test2), JSON_BOOL);
-			  assertEquals(json_as_bool(test2), true);
-			  json_set_b(test2, true);
-			  assertEquals(json_as_bool(test2), true);
-
+		  assertEquals(static_cast<bool>(json_as_bool(test2)), true);
+		  json_set_b(test2, true);
+		  assertEquals(static_cast<bool>(json_as_bool(test2)), true);
 			  json_cast(test2, JSON_NUMBER);
 			  assertEquals_Primitive(json_as_float(test2), 1.0f);
 			  json_set_f(test2, 0.0f);
@@ -210,7 +209,7 @@ void TestSuite::TestFunctions(void){
 			 test2.cast(JSON_BOOL);
 			 assertEquals(test2, false);
 		  #endif
-    
+
 		  UnitTest::SetPrefix("TestFunctions.cpp - Merge");
 		  test1 = JSON_TEXT("hello");
 		  test2 = JSON_TEXT("hello");

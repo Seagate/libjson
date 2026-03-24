@@ -162,11 +162,11 @@ namespace libbase64 {
 			}
 
 			//now do the final three bytes
-			result += libbase64_characters::getChar<CHARTYPE>((temp[0] & 0xFC) >> 2);
-			result += libbase64_characters::getChar<CHARTYPE>(((temp[0] & 0x03) << 4) + ((temp[1] & 0xF0) >> 4));
+			result += libbase64_characters::getChar<CHARTYPE>((temp[0] & 0xFCu) >> 2);
+			result += libbase64_characters::getChar<CHARTYPE>(((temp[0] & 0x03u) << 4) + ((temp[1] & 0xF0u) >> 4));
 			if (misaligned == 2){
 				LIBBASE64CODECOVERAGEBRANCH;
-				result += libbase64_characters::getChar<CHARTYPE>(((temp[1] & 0x0F) << 2) + ((temp[2] & 0xC0) >> 6));
+				result += libbase64_characters::getChar<CHARTYPE>(((temp[1] & 0x0Fu) << 2) + ((temp[2] & 0xC0u) >> 6));
 			} else {
 				LIBBASE64CODECOVERAGEBRANCH;
 				result += (CHARTYPE)'=';

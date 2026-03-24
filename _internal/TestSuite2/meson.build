@@ -31,11 +31,17 @@ test2_sources = [
     'JSONGlobals/jsonSingleton.cpp',
 ]
 
+test_args = []
+if target_machine.system() == 'windows'
+    test_args += ['-D_CRT_SECURE_NO_WARNINGS']
+endif
+
 libjson_tests2 = static_library(
     'libjson_testsuite2',
     test2_sources,
     include_directories: ['../Source', '../../'],
     dependencies: [libjson_dep],
+    cpp_args: test_args,
 )
 
 libjson_tests2_dep = declare_dependency(link_with: libjson_tests2, include_directories: ['../Source', '../../'])

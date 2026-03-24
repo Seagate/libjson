@@ -59,7 +59,7 @@ void TestSuite::TestAssigning(void){
 		  assertCStringSame(res, JSON_TEXT("true"));
 		#endif
 		  json_free(res);
-		  assertEquals(json_as_bool(test1), true);
+		  assertEquals(static_cast<bool>(json_as_bool(test1)), true);
 
 		  //check boolean
 		  json_set_b(test1, false);

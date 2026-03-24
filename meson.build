@@ -45,10 +45,15 @@ if buildtype == 'debug'
     endif
     cpp_args += ['-DJSON_DEBUG']
 elif buildtype == 'minsize'
-    cpp_args += ['-ffast-math', '-DJSON_LESS_MEMORY']
+    if cpp.get_id().contains('gcc') or cpp.get_id().contains('clang')
+        cpp_args += ['-ffast-math']
+    endif
+    cpp_args += ['-DJSON_LESS_MEMORY']
 else
     # release, debugoptimized, or other
-    cpp_args += ['-ffast-math', '-fexpensive-optimizations']
+    if cpp.get_id().contains('gcc') or cpp.get_id().contains('clang')
+        cpp_args += ['-ffast-math', '-fexpensive-optimizations']
+    endif
 endif
 
 warning_flags = []
@@ -252,7 +257,7 @@ elif cpp.get_id().contains('msvc')
         '/we4837',  # trigraph detected: '??character' replaced by 'character'
         '/we4628',  # digraphs not supported with -Ze. Character sequence 'digraph' not interpreted as alternate token for 'char'
         '/we4289',  # nonstandard extension used : 'var' : loop control variable declared in the for-loop is used outside the for-loop scope
-        '/we4464',  # relative include path contains '..'
+        #'/we4464',  # relative include path contains '..'
         '/GS',  #security cookie for stack protection
         '/sdl',  #adds recommended security development lifecycle checks
         '/Qspectre',
@@ -315,6 +320,10 @@ endif
 # if architecture == 'x86_32'
 #     cpp_args += ['-m32']
 # endif
+
+if target_machine.system() == 'windows'
+    add_project_arguments('-D_CRT_SECURE_NO_WARNINGS', language: 'c')
+endif
 
 common_sources = [
     '_internal/Source/internalJSONNode.cpp',

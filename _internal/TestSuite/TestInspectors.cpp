@@ -12,7 +12,7 @@ void TestSuite::TestInspectors(void){
 		  json_free(res);
 		  assertEquals_Primitive(json_as_int(test), 0);
 		  assertEquals_Primitive(json_as_float(test), 0.0f);
-		  assertEquals(json_as_bool(test), false);
+		  assertEquals(static_cast<bool>(json_as_bool(test)), false);
 
 		  json_set_f(test, 15.5f);
 		  assertEquals(json_type(test), JSON_NUMBER);
@@ -24,7 +24,7 @@ void TestSuite::TestInspectors(void){
 		  assertEquals_Primitive(json_as_int(test), 15);
 		  assertEquals_Primitive(json_as_float(test), 15.5f);
 		  #ifdef JSON_CASTABLE
-				assertEquals(json_as_bool(test), true);
+				assertEquals(static_cast<bool>(json_as_bool(test)), true);
 		  #endif
 
 		  json_set_f(test, 0.0f);
@@ -37,9 +37,9 @@ void TestSuite::TestInspectors(void){
 		  assertEquals_Primitive(json_as_int(test), 0);
 		  assertEquals_Primitive(json_as_float(test), 0.0f);
 		  #ifdef JSON_CASTABLE
-			assertEquals(json_as_bool(test), false);
+			assertEquals(static_cast<bool>(json_as_bool(test)), false);
 		  #endif
-	
+
 		  json_set_b(test, true);
 		  assertEquals(json_type(test), JSON_BOOL);
 		  #ifdef JSON_CASTABLE
@@ -49,7 +49,7 @@ void TestSuite::TestInspectors(void){
 			assertEquals_Primitive(json_as_int(test), 1);
 			assertEquals_Primitive(json_as_float(test), 1.0f);
 		  #endif
-		  assertEquals(json_as_bool(test), true);
+		  assertEquals(static_cast<bool>(json_as_bool(test)), true);
 
 		  json_set_b(test, false);
 		  assertEquals(json_type(test), JSON_BOOL);
@@ -60,7 +60,7 @@ void TestSuite::TestInspectors(void){
 			assertEquals_Primitive(json_as_int(test), 0);
 			assertEquals_Primitive(json_as_float(test), 0.0f);
 		  #endif
-		  assertEquals(json_as_bool(test), false);
+		  assertEquals(static_cast<bool>(json_as_bool(test)), false);
 		  #ifdef JSON_CASTABLE
 				  json_cast(test, JSON_NODE);
 				  assertEquals(json_type(test), JSON_NODE);
@@ -108,14 +108,14 @@ void TestSuite::TestInspectors(void){
 				  CheckNameAt(casted, 0, JSON_TEXT(""));
 				  CheckNameAt(casted, 1, JSON_TEXT(""));
 				  CheckNameAt(casted, 2, JSON_TEXT(""));
-	
+
 				  CheckAt(test, 0, JSON_TEXT("world"));
 				  CheckAt(test, 1, JSON_TEXT("mars"));
 				  CheckAt(test, 2, JSON_TEXT("france"));
 				  CheckNameAt(test, 0, JSON_TEXT("hi"));
 				  CheckNameAt(test, 1, JSON_TEXT("hello"));
 				  CheckNameAt(test, 2, JSON_TEXT("salut"));
-		  
+
 
 				  #define CheckGet(parent, locale, text)\
 					 if(JSONNODE * temp = json_get(parent, locale)){\
@@ -145,7 +145,7 @@ void TestSuite::TestInspectors(void){
 				  CheckGetNoCase(test, JSON_TEXT("HELLO"), JSON_TEXT("mars"));
 				  CheckGet(test, JSON_TEXT("salut"), JSON_TEXT("france"));
 				  CheckGetNoCase(test, JSON_TEXT("SALUT"), JSON_TEXT("france"));
-	
+
 				assertNull(json_get(test, JSON_TEXT("meh")));
 				#ifdef JSON_CASE_INSENSITIVE_FUNCTIONS
 					assertNull(json_get_nocase(test, JSON_TEXT("meh")));
@@ -345,7 +345,7 @@ void TestSuite::TestInspectors(void){
 				assertEquals(test.as_binary(), "");
 			 #endif
 		  #endif
-		  
+
          #ifdef JSON_READ_PRIORITY
 			//This is a regression test for a bug in at()
 			json_string buffer(JSON_TEXT("{ \"myValue1\" : \"foo\", \"myValue2\" : \"bar\"}"));
