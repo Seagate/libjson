@@ -136,6 +136,7 @@ if cpp.get_id().contains('gcc') or cpp.get_id().contains('clang')
         '-Wcalloc-transposed-args',
         '-Werror=alloca',  # Do not allow use of the alloca function
         '-Wstring-compare',  # Helps detect when strcmp is used when the programmer likely meant to use strncmp
+        '-Wno-template-body',  # GCC 14+ -Wtemplate-body false-positives/hard-errors in libstdc++ headers (e.g. exception_ptr.h make_exception_ptr)
     ]
 
     if cpp.get_id().contains('gcc') and cpp.version().version_compare('>=10.0')
